@@ -23,14 +23,6 @@ export default function LocomotiveScrollProvider({
     locomotiveScrollRef.current = new LocomotiveScroll({
       el: containerRef.current,
       smooth: true,
-      smartphone: {
-        smooth: true,
-        breakpoint: 0,
-      },
-      tablet: {
-        smooth: true,
-        breakpoint: 1024,
-      },
       ...options,
     })
 
