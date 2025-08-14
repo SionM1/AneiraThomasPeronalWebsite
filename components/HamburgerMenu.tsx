@@ -49,7 +49,7 @@ export default function HamburgerMenu() {
       {/* right drawer */}
       <nav
         aria-hidden={!open}
-        className="fixed top-0 right-0 z-[920] h-screen w-3/4 sm:w-2/3 md:w-1/2 lg:w-96"
+        className="fixed top-0 right-0 z-[920] h-screen w-1/2 sm:w-1/2 md:w-1/3 lg:w-96"
         style={{
           backgroundColor: BRAND_YELLOW,
           transform: open ? 'translate3d(0,0,0)' : 'translate3d(100%,0,0)',
