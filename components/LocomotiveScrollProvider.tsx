@@ -25,9 +25,11 @@ export default function LocomotiveScrollProvider({
       smooth: true,
       smartphone: {
         smooth: true,
+        breakpoint: 0,
       },
       tablet: {
         smooth: true,
+        breakpoint: 1024,
       },
       ...options,
     })
