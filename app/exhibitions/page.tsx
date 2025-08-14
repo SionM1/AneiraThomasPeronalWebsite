@@ -94,9 +94,8 @@ export default function ExhibitionsPage() {
         </div>
       </div>
 
-      {/* Spacer to ensure proper footer positioning */}
-      <div className="h-screen"></div>
-      <div className="h-[250vh]"></div>
+      {/* Spacer to maintain layout flow */}
+      <div className="min-h-screen"></div>
     </>
   )
 }

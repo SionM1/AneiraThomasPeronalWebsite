@@ -136,9 +136,8 @@ export default function GalleryPage() {
         </div>
       </div>
 
-      {/* Spacer to ensure proper footer positioning */}
-      <div className="h-screen"></div>
-      <div className="h-[200vh]"></div>
+      {/* Spacer to maintain layout flow */}
+      <div className="min-h-screen"></div>
     </>
   )
 }
