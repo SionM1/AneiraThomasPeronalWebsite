@@ -10,9 +10,7 @@ export default function Footer() {
   const isAboutPage = pathname === '/about'
 
   return (
-    <footer
-      className="relative right-1/2 left-1/2 -mx-[50vw] w-screen bg-white"
-    >
+    <footer className="relative right-1/2 left-1/2 -mx-[50vw] w-screen bg-white">
       {/* Your footer content */}
       <div className="mt-20 flex flex-col items-center">
         <div className="mb-3 flex space-x-4">

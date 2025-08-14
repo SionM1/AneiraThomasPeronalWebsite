@@ -65,20 +65,17 @@ export default function ExhibitionsPage() {
     <>
       {/* Exhibitions Section - Break Out of SectionContainer */}
       <div className="absolute left-1/2 w-screen -translate-x-1/2 transform">
-        <div className="w-full py-24 bg-white" style={{ width: '100vw' }}>
+        <div className="w-full bg-white py-24" style={{ width: '100vw' }}>
           {/* Aneira Thomas Header - Top Left Position (scrolls naturally) */}
           <div className="absolute top-6 left-8 z-[60]">
-            <h1
-              className={`${coveredByYourGrace.className} text-5xl`}
-              style={{ color: '#DED308' }}
-            >
+            <h1 className={`${coveredByYourGrace.className} text-5xl`} style={{ color: '#DED308' }}>
               Aneira Thomas
             </h1>
           </div>
 
           {/* Section Title - Left Aligned with Divider */}
-          <div className="w-full px-8 sm:px-16 lg:px-24 xl:px-32 2xl:px-48 pt-32">
-            <div className="w-full mb-12">
+          <div className="w-full px-8 pt-32 sm:px-16 lg:px-24 xl:px-32 2xl:px-48">
+            <div className="mb-12 w-full">
               <h2
                 className="mb-6 text-5xl md:text-6xl"
                 style={{ color: '#DED308', fontFamily: 'Menlo', fontWeight: 'bold' }}
@@ -87,7 +84,7 @@ export default function ExhibitionsPage() {
               </h2>
             </div>
             {/* Divider Line */}
-            <div className="w-full border-b border-gray-200 mb-16"></div>
+            <div className="mb-16 w-full border-b border-gray-200"></div>
           </div>
 
           {/* Timeline Content */}
@@ -96,7 +93,7 @@ export default function ExhibitionsPage() {
           </div>
         </div>
       </div>
-      
+
       {/* Spacer to ensure proper footer positioning */}
       <div className="h-screen"></div>
       <div className="h-[250vh]"></div>

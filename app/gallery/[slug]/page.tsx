@@ -54,16 +54,13 @@ export default async function ArtworkPage({ params }: ArtworkPageProps) {
     <div className="min-h-screen bg-white">
       {/* Aneira Thomas Header - Top Left Position */}
       <div className="absolute top-6 left-8 z-[60]">
-        <h1
-          className={`${coveredByYourGrace.className} text-5xl`}
-          style={{ color: '#DED308' }}
-        >
+        <h1 className={`${coveredByYourGrace.className} text-5xl`} style={{ color: '#DED308' }}>
           Aneira Thomas
         </h1>
       </div>
 
       {/* Back button */}
-      <div className="px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16 pt-32">
+      <div className="px-4 pt-32 sm:px-6 lg:px-8 xl:px-12 2xl:px-16">
         <Link
           href="/gallery"
           className="group mb-8 inline-flex items-center"
@@ -87,12 +84,12 @@ export default async function ArtworkPage({ params }: ArtworkPageProps) {
       </div>
 
       {/* Main content area */}
-      <div className="px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16 pb-24">
+      <div className="px-4 pb-24 sm:px-6 lg:px-8 xl:px-12 2xl:px-16">
         <div className="grid grid-cols-1 gap-16 lg:gap-20 xl:grid-cols-5">
           {/* Image - Takes up more space and centers itself */}
           <div className="flex justify-center xl:col-span-3">
             <div className="relative max-w-full">
-              <div className="border-2 border-gray-200 overflow-hidden">
+              <div className="overflow-hidden border-2 border-gray-200">
                 <Image
                   src={artwork.imagePath}
                   alt={artwork.title}
@@ -110,14 +107,14 @@ export default async function ArtworkPage({ params }: ArtworkPageProps) {
           <div className="xl:col-span-2">
             <div className="flex flex-col justify-start space-y-8">
               <div>
-                <h1 
+                <h1
                   className="mb-4 text-4xl"
                   style={{ color: '#DED308', fontFamily: 'Menlo', fontWeight: 'bold' }}
                 >
                   {artwork.title}
                 </h1>
                 {artwork.year && (
-                  <p 
+                  <p
                     className="text-xl"
                     style={{ fontFamily: 'Menlo', fontWeight: '400', color: '#000' }}
                   >
@@ -128,13 +125,13 @@ export default async function ArtworkPage({ params }: ArtworkPageProps) {
 
               <div className="space-y-6">
                 <div>
-                  <h3 
-                    className="text-sm tracking-wide uppercase mb-2"
+                  <h3
+                    className="mb-2 text-sm tracking-wide uppercase"
                     style={{ fontFamily: 'Menlo', fontWeight: 'bold', color: '#000' }}
                   >
                     Medium
                   </h3>
-                  <p 
+                  <p
                     className="text-lg"
                     style={{ fontFamily: 'Menlo', fontWeight: '400', color: '#000' }}
                   >
@@ -143,13 +140,13 @@ export default async function ArtworkPage({ params }: ArtworkPageProps) {
                 </div>
 
                 <div>
-                  <h3 
-                    className="text-sm tracking-wide uppercase mb-2"
+                  <h3
+                    className="mb-2 text-sm tracking-wide uppercase"
                     style={{ fontFamily: 'Menlo', fontWeight: 'bold', color: '#000' }}
                   >
                     Dimensions
                   </h3>
-                  <p 
+                  <p
                     className="text-lg"
                     style={{ fontFamily: 'Menlo', fontWeight: '400', color: '#000' }}
                   >
@@ -159,18 +156,18 @@ export default async function ArtworkPage({ params }: ArtworkPageProps) {
 
                 {artwork.available !== undefined && (
                   <div>
-                    <h3 
-                      className="text-sm tracking-wide uppercase mb-2"
+                    <h3
+                      className="mb-2 text-sm tracking-wide uppercase"
                       style={{ fontFamily: 'Menlo', fontWeight: 'bold', color: '#000' }}
                     >
                       Availability
                     </h3>
                     <p
                       className="text-lg"
-                      style={{ 
-                        fontFamily: 'Menlo', 
-                        fontWeight: '400', 
-                        color: artwork.available ? '#059669' : '#DC2626' 
+                      style={{
+                        fontFamily: 'Menlo',
+                        fontWeight: '400',
+                        color: artwork.available ? '#059669' : '#DC2626',
                       }}
                     >
                       {artwork.available ? 'Available' : 'Sold'}
@@ -180,13 +177,13 @@ export default async function ArtworkPage({ params }: ArtworkPageProps) {
 
                 {artwork.price && artwork.available && (
                   <div>
-                    <h3 
-                      className="text-sm tracking-wide uppercase mb-2"
+                    <h3
+                      className="mb-2 text-sm tracking-wide uppercase"
                       style={{ fontFamily: 'Menlo', fontWeight: 'bold', color: '#000' }}
                     >
                       Price
                     </h3>
-                    <p 
+                    <p
                       className="text-lg"
                       style={{ fontFamily: 'Menlo', fontWeight: '400', color: '#000' }}
                     >
@@ -197,15 +194,20 @@ export default async function ArtworkPage({ params }: ArtworkPageProps) {
               </div>
 
               <div>
-                <h3 
-                  className="text-sm tracking-wide uppercase mb-4"
+                <h3
+                  className="mb-4 text-sm tracking-wide uppercase"
                   style={{ fontFamily: 'Menlo', fontWeight: 'bold', color: '#000' }}
                 >
                   Description
                 </h3>
-                <p 
+                <p
                   className="text-lg leading-relaxed"
-                  style={{ fontFamily: 'Menlo', fontWeight: '400', color: '#000', lineHeight: '1.7' }}
+                  style={{
+                    fontFamily: 'Menlo',
+                    fontWeight: '400',
+                    color: '#000',
+                    lineHeight: '1.7',
+                  }}
                 >
                   {artwork.description}
                 </p>

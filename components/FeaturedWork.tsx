@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
+import Image from 'next/image'
 import { getFeaturedArtworks } from '@/data/artworksData'
 
 interface FeaturedWorkProps {
@@ -101,10 +102,11 @@ export default function FeaturedWork({ className = '' }: FeaturedWorkProps) {
                 <div className="relative h-[28rem] w-full overflow-hidden bg-transparent transition-all duration-500 group-hover:scale-105">
                   {/* Image container with higher z-index */}
                   <div className="absolute relative inset-6 z-40 overflow-hidden border-2 border-gray-200 bg-transparent transition-colors duration-300 group-hover:border-gray-300">
-                    <img
+                    <Image
                       src={artwork.imagePath}
                       alt={artwork.title}
-                      className="h-full w-full object-contain"
+                      fill
+                      className="object-contain"
                       style={{
                         position: 'relative',
                         zIndex: 50,
@@ -117,9 +119,9 @@ export default function FeaturedWork({ className = '' }: FeaturedWorkProps) {
                   {index !== 2 && (
                     <div className="bg-opacity-0 group-hover:bg-opacity-20 absolute relative inset-0 z-45 flex items-center justify-center bg-black transition-all duration-500">
                       <div className="translate-y-4 transform opacity-0 transition-all duration-500 group-hover:translate-y-0 group-hover:opacity-100">
-                      <div className="bg-opacity-95 bg-white px-6 py-3 shadow-lg">
-                      <span className="text-base font-semibold text-black">View Artwork</span>
-                      </div>
+                        <div className="bg-opacity-95 bg-white px-6 py-3 shadow-lg">
+                          <span className="text-base font-semibold text-black">View Artwork</span>
+                        </div>
                       </div>
                     </div>
                   )}

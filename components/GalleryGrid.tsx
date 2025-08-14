@@ -75,16 +75,16 @@ export default function GalleryGrid({ artworks }: GalleryGridProps) {
                     priority={index < 6}
                   />
                   <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100">
-                    <div className="absolute bottom-0 left-0 right-0 p-4 text-white">
+                    <div className="absolute right-0 bottom-0 left-0 p-4 text-white">
                       <h3 className="mb-1 text-lg font-semibold">{artwork.title}</h3>
                       <p className="mb-1 text-sm opacity-90">{artwork.medium}</p>
                       {artwork.year && <p className="mb-2 text-sm opacity-75">{artwork.year}</p>}
                       {artwork.available !== undefined && (
                         <span
                           className={`inline-block px-3 py-1 text-xs font-medium ${
-                          artwork.available
-                          ? 'bg-green-500/90 text-white'
-                          : 'bg-red-500/90 text-white'
+                            artwork.available
+                              ? 'bg-green-500/90 text-white'
+                              : 'bg-red-500/90 text-white'
                           }`}
                         >
                           {artwork.available ? 'Available' : 'Sold'}

@@ -1,29 +1,26 @@
 {
-    "image": "mcr.microsoft.com/devcontainers/javascript-node:20",
-    "hostRequirements": { "memory": "8gb" },
-    "waitFor": "onCreateCommand",
-    "updateContentCommand": "yarn",
-    "overrideCommand": false,
-    "postCreateCommand": "",
-    "postAttachCommand": "HOST=0.0.0.0 PORT=3000 yarn dev",
-    "customizations": {
-      "vscode": {
-        "settings": { "editor.formatOnSave": true },
-        "extensions": ["dbaeumer.vscode-eslint", "esbenp.prettier-vscode"]
-      }
-    },
-  
-    "runArgs": [
-      "-p", "3000:3000"
-    ],
-  
-    "portsAttributes": {
-      "3000": {
-        "label": "Next.js",
-        "onAutoForward": "openBrowser"
-      }
-    },
-  
-    "forwardPorts": [3000]
-  }
-  
+  "image": "mcr.microsoft.com/devcontainers/javascript-node:20",
+  "hostRequirements": { "memory": "8gb" },
+  "waitFor": "onCreateCommand",
+  "updateContentCommand": "yarn",
+  "overrideCommand": false,
+  "postCreateCommand": "",
+  "postAttachCommand": "HOST=0.0.0.0 PORT=3000 yarn dev",
+  "customizations": {
+    "vscode": {
+      "settings": { "editor.formatOnSave": true },
+      "extensions": ["dbaeumer.vscode-eslint", "esbenp.prettier-vscode"]
+    }
+  },
+
+  "runArgs": ["-p", "3000:3000"],
+
+  "portsAttributes": {
+    "3000": {
+      "label": "Next.js",
+      "onAutoForward": "openBrowser"
+    }
+  },
+
+  "forwardPorts": [3000]
+}
