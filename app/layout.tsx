@@ -84,14 +84,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           {/* Global Hamburger Menu - appears on all pages */}
           <HamburgerMenu />
 
-          <SectionContainer>
-            <SearchProvider searchConfig={siteMetadata.search as SearchConfig}>
-              <div className="flex min-h-screen flex-col justify-between font-sans">
-                <main className="flex-1">{children}</main>
-                <Footer />
-              </div>
-            </SearchProvider>
-          </SectionContainer>
+          <SearchProvider searchConfig={siteMetadata.search as SearchConfig}>
+            <div className="flex min-h-screen flex-col font-sans">
+              <main className="flex-1">{children}</main>
+              <Footer />
+            </div>
+          </SearchProvider>
         </ThemeProviders>
       </body>
     </html>

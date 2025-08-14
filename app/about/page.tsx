@@ -81,17 +81,17 @@ export default function AboutPage() {
               <div className="w-full space-y-32">
                 {/* Artist Background Section */}
                 <div
-                  className={`grid grid-cols-12 items-start gap-x-12 gap-y-12 transition-all duration-800 ease-out ${
+                  className={`flex flex-col items-start gap-x-6 gap-y-8 transition-all duration-800 ease-out lg:grid lg:grid-cols-12 lg:gap-x-12 lg:gap-y-12 ${
                     isVisible
                       ? 'translate-y-0 scale-100 opacity-100'
                       : 'translate-y-12 scale-95 opacity-0'
                   }`}
                   style={{ transitionDelay: '600ms' }}
                 >
-                  <div className="col-span-12 w-full lg:col-span-5 xl:col-span-6">
-                    <div className="prose prose-xl w-full max-w-none">
+                  <div className="w-full lg:col-span-5 xl:col-span-6">
+                    <div className="prose prose-lg lg:prose-xl w-full max-w-none">
                       <p
-                        className="mb-6 max-w-none text-lg leading-relaxed text-gray-900"
+                        className="mb-4 max-w-none text-base leading-relaxed text-gray-900 lg:mb-6 lg:text-lg"
                         style={{ fontFamily: 'Menlo', lineHeight: '1.7' }}
                       >
                         Aneira Thomas is a contemporary artist whose work explores the intricate
@@ -102,7 +102,7 @@ export default function AboutPage() {
                       </p>
 
                       <p
-                        className="max-w-none text-lg leading-relaxed text-gray-900"
+                        className="max-w-none text-base leading-relaxed text-gray-900 lg:text-lg"
                         style={{ fontFamily: 'Menlo', lineHeight: '1.7' }}
                       >
                         Her artistic journey began in childhood, sketching the changing seasons from
@@ -113,8 +113,8 @@ export default function AboutPage() {
                     </div>
                   </div>
 
-                  <div className="col-span-12 w-full lg:col-span-7 xl:col-span-6">
-                    <div className="relative aspect-[3/2] w-full overflow-hidden border-2 border-gray-200">
+                  <div className="order-first w-full lg:order-none lg:col-span-7 xl:col-span-6">
+                    <div className="relative aspect-[4/3] w-full overflow-hidden border-2 border-gray-200 lg:aspect-[3/2]">
                       <Image
                         src="/static/images/AneiraWorking1.jpeg"
                         alt="Aneira Thomas in her studio, surrounded by natural materials and works in progress"
@@ -129,24 +129,24 @@ export default function AboutPage() {
 
                 {/* Connection to Nature Section */}
                 <div
-                  className={`grid grid-cols-12 items-start gap-x-12 gap-y-12 transition-all duration-800 ease-out ${
+                  className={`flex flex-col items-start gap-x-6 gap-y-8 transition-all duration-800 ease-out lg:grid lg:grid-cols-12 lg:gap-x-12 lg:gap-y-12 ${
                     isVisible
                       ? 'translate-y-0 scale-100 opacity-100'
                       : 'translate-y-12 scale-95 opacity-0'
                   }`}
                   style={{ transitionDelay: '750ms' }}
                 >
-                  <div className="col-span-12 w-full lg:col-span-5 xl:col-span-6">
-                    <div className="prose prose-xl w-full max-w-none">
+                  <div className="w-full lg:col-span-5 xl:col-span-6">
+                    <div className="prose prose-lg lg:prose-xl w-full max-w-none">
                       <h2
-                        className={`${coveredByYourGrace.className} mb-6 max-w-none text-3xl`}
+                        className={`${coveredByYourGrace.className} mb-4 max-w-none text-2xl lg:mb-6 lg:text-3xl`}
                         style={{ color: '#DED308' }}
                       >
                         Connection to Nature
                       </h2>
 
                       <p
-                        className="mb-6 max-w-none text-lg leading-relaxed text-gray-900"
+                        className="mb-4 max-w-none text-base leading-relaxed text-gray-900 lg:mb-6 lg:text-lg"
                         style={{ fontFamily: 'Menlo', lineHeight: '1.7' }}
                       >
                         Nature serves as both muse and teacher in Aneira's artistic practice. She
@@ -158,7 +158,7 @@ export default function AboutPage() {
                       </p>
 
                       <p
-                        className="max-w-none text-lg leading-relaxed text-gray-900"
+                        className="max-w-none text-base leading-relaxed text-gray-900 lg:text-lg"
                         style={{ fontFamily: 'Menlo', lineHeight: '1.7' }}
                       >
                         Her process often begins outdoors, where she collects fragments of bark,
@@ -170,8 +170,8 @@ export default function AboutPage() {
                     </div>
                   </div>
 
-                  <div className="col-span-12 w-full lg:col-span-7 xl:col-span-6">
-                    <div className="relative aspect-[3/2] w-full overflow-hidden border-2 border-gray-200">
+                  <div className="w-full lg:col-span-7 xl:col-span-6">
+                    <div className="relative aspect-[4/3] w-full overflow-hidden border-2 border-gray-200 lg:aspect-[3/2]">
                       <Image
                         src="/static/images/AneiraWorking2.jpeg"
                         alt="Aneira Thomas working with natural materials in her creative process"
@@ -185,24 +185,24 @@ export default function AboutPage() {
 
                 {/* Philosophy Section */}
                 <div
-                  className={`grid grid-cols-12 items-start gap-x-12 gap-y-12 transition-all duration-800 ease-out ${
+                  className={`flex flex-col items-start gap-x-6 gap-y-8 transition-all duration-800 ease-out lg:grid lg:grid-cols-12 lg:gap-x-12 lg:gap-y-12 ${
                     isVisible
                       ? 'translate-y-0 scale-100 opacity-100'
                       : 'translate-y-12 scale-95 opacity-0'
                   }`}
                   style={{ transitionDelay: '900ms' }}
                 >
-                  <div className="col-span-12 w-full lg:col-span-5 xl:col-span-6">
-                    <div className="prose prose-xl w-full max-w-none">
+                  <div className="w-full lg:col-span-5 xl:col-span-6">
+                    <div className="prose prose-lg lg:prose-xl w-full max-w-none">
                       <h2
-                        className={`${coveredByYourGrace.className} mb-6 max-w-none text-3xl`}
+                        className={`${coveredByYourGrace.className} mb-4 max-w-none text-2xl lg:mb-6 lg:text-3xl`}
                         style={{ color: '#DED308' }}
                       >
                         Philosophy
                       </h2>
 
                       <p
-                        className="mb-6 max-w-none text-lg leading-relaxed text-gray-900"
+                        className="mb-4 max-w-none text-base leading-relaxed text-gray-900 lg:mb-6 lg:text-lg"
                         style={{ fontFamily: 'Menlo', lineHeight: '1.7' }}
                       >
                         At the heart of Aneira's work lies a belief that art can serve as a bridge
@@ -213,7 +213,7 @@ export default function AboutPage() {
                       </p>
 
                       <p
-                        className="max-w-none text-lg leading-relaxed text-gray-900"
+                        className="max-w-none text-base leading-relaxed text-gray-900 lg:text-lg"
                         style={{ fontFamily: 'Menlo', lineHeight: '1.7' }}
                       >
                         Through her ongoing exploration of texture, color, and form, Aneira
@@ -225,8 +225,8 @@ export default function AboutPage() {
                     </div>
                   </div>
 
-                  <div className="col-span-12 w-full lg:col-span-7 xl:col-span-6">
-                    <div className="relative aspect-[3/2] w-full overflow-hidden border-2 border-gray-200">
+                  <div className="order-first w-full lg:order-none lg:col-span-7 xl:col-span-6">
+                    <div className="relative aspect-[4/3] w-full overflow-hidden border-2 border-gray-200 lg:aspect-[3/2]">
                       <Image
                         src="/static/images/AneiraWorking3.jpeg"
                         alt="Aneira Thomas in her artistic environment, connecting with nature-inspired elements"

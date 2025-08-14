@@ -133,7 +133,9 @@ export default function Page() {
               >
                 <h1
                   className={`${coveredByYourGrace.className} ${
-                    isSliderVisible ? 'text-5xl' : 'text-8xl'
+                    isSliderVisible
+                      ? 'text-2xl sm:text-3xl md:text-4xl lg:text-5xl'
+                      : 'text-4xl sm:text-5xl md:text-6xl lg:text-8xl'
                   } transition-all duration-500 ease-out`}
                   style={{ color: '#DED308' }}
                 >
