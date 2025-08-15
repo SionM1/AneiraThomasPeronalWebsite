@@ -162,7 +162,7 @@ export default function ExhibitionTimeline({ exhibitions }: ExhibitionTimelinePr
   const totalSVGHeight = (exhibitions.length + 1) * 300 + 100
 
   return (
-    <div className="w-full py-12 pb-32" ref={timelineRef}>
+    <div className="w-full py-8 pb-32 sm:py-12" ref={timelineRef}>
       <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="lg:grid lg:grid-cols-12 lg:gap-8">
           {/* Left Column - Dynamic Winding Line */}
@@ -290,7 +290,7 @@ export default function ExhibitionTimeline({ exhibitions }: ExhibitionTimelinePr
                     >
                       <div className="lg:flex">
                         <div className="lg:w-1/4">
-                          <div className="relative h-60 overflow-hidden lg:h-full">
+                          <div className="relative h-48 overflow-hidden sm:h-60 lg:h-full">
                             <Image
                               src={
                                 exhibition.imagePath || '/static/images/placeholder-exhibition.jpg'
@@ -298,30 +298,36 @@ export default function ExhibitionTimeline({ exhibitions }: ExhibitionTimelinePr
                               alt={exhibition.title}
                               fill
                               className="object-cover transition-transform duration-700 group-hover:scale-110"
-                              sizes="(max-width: 1024px) 100vw, 25vw"
+                              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 100vw, 25vw"
                             />
                             <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
                           </div>
                         </div>
 
-                        <div className="p-8 lg:w-3/4">
+                        <div className="p-4 sm:p-6 lg:w-3/4 lg:p-8">
                           <div className="mb-4 flex flex-col lg:flex-row lg:items-start lg:justify-between">
                             <div className="flex-1">
-                              <h3 className="mb-2 text-2xl font-bold text-gray-900 transition-colors duration-300 group-hover:text-[#DED308]">
+                              <h3 className="mb-2 text-xl font-bold text-gray-900 italic transition-colors duration-300 group-hover:text-[#DED308] sm:text-2xl">
                                 {exhibition.title}
                               </h3>
-                              <p className="mb-1 text-lg text-gray-600">{exhibition.venue}</p>
+                              {exhibition.venue && (
+                                <p className="mb-1 text-base text-gray-600 sm:text-lg">
+                                  {exhibition.venue}
+                                </p>
+                              )}
                             </div>
                             <div className="mt-2 lg:mt-0">
-                              <span className="inline-block bg-[#DED308] px-4 py-2 text-sm font-medium text-white transition-colors duration-300 group-hover:bg-[#C4BB07]">
+                              <span className="inline-block bg-[#DED308] px-3 py-2 text-sm font-medium text-white transition-colors duration-300 group-hover:bg-[#C4BB07] sm:px-4">
                                 {exhibition.date}
                               </span>
                             </div>
                           </div>
 
-                          <p className="mb-6 leading-relaxed text-gray-600">
-                            {exhibition.description}
-                          </p>
+                          {exhibition.description && (
+                            <p className="mb-6 leading-relaxed text-gray-600">
+                              {exhibition.description}
+                            </p>
+                          )}
 
                           {exhibition.link && (
                             <Link

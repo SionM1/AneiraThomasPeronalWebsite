@@ -14,19 +14,19 @@ export default function Projects() {
   return (
     <>
       <div className="divide-y divide-gray-200 dark:divide-gray-700">
-        <div className="space-y-2 pt-6 pb-8 md:space-y-5">
+        <div className="space-y-2 px-4 pt-4 pb-6 sm:px-6 sm:pt-6 sm:pb-8 md:space-y-5 lg:px-8">
           <h1
-            className={`${coveredByYourGrace.className} text-4xl leading-tight sm:text-5xl md:text-6xl`}
+            className={`${coveredByYourGrace.className} text-2xl leading-tight sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl`}
             style={{ color: '#DED308' }}
           >
             Projects
           </h1>
-          <p className="text-lg leading-7 text-gray-500 dark:text-gray-400">
+          <p className="text-base leading-6 text-gray-500 sm:text-lg sm:leading-7 dark:text-gray-400">
             Showcase your projects with a hero image (16 x 9)
           </p>
         </div>
-        <div className="container py-12">
-          <div className="-m-4 flex flex-wrap">
+        <div className="container px-4 py-8 sm:px-6 sm:py-10 md:py-12 lg:px-8">
+          <div className="-m-2 flex flex-wrap sm:-m-4">
             {projectsData.map((d) => (
               <Card
                 key={d.title}

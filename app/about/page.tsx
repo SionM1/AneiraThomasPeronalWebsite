@@ -45,29 +45,32 @@ export default function AboutPage() {
           style={{ width: '100vw' }}
         >
           {/* Aneira Thomas Header - Top Left Position (scrolls naturally) */}
-          <div className="absolute top-6 left-8 z-[60]">
-            <h1 className={`${coveredByYourGrace.className} text-5xl`} style={{ color: '#DED308' }}>
+          <div className="absolute top-4 left-4 z-[60] sm:top-6 sm:left-6 md:left-8">
+            <h1
+              className={`${coveredByYourGrace.className} text-2xl sm:text-3xl md:text-4xl lg:text-5xl`}
+              style={{ color: '#DED308' }}
+            >
               Aneira Thomas
             </h1>
           </div>
 
           {/* Section Title - Left Aligned with Divider */}
-          <div className="w-full px-8 pt-32 sm:px-16 lg:px-24 xl:px-32 2xl:px-48">
+          <div className="w-full px-4 pt-24 sm:px-6 sm:pt-28 md:px-8 md:pt-32 lg:px-16 lg:pt-32 xl:px-24 xl:pt-32 2xl:px-32">
             <div
-              className={`mb-12 w-full transition-all duration-1200 ease-out ${
+              className={`mb-8 w-full transition-all duration-1200 ease-out sm:mb-10 md:mb-12 ${
                 isVisible ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'
               }`}
               style={{ transitionDelay: '200ms' }}
             >
               <h2
-                className="mb-6 text-5xl md:text-6xl"
+                className="mb-4 text-3xl sm:mb-6 sm:text-4xl md:text-5xl lg:text-6xl"
                 style={{ color: '#DED308', fontFamily: 'Menlo', fontWeight: 'bold' }}
               >
                 About
               </h2>
             </div>
             {/* Divider Line */}
-            <div className="mb-16 w-full border-b border-gray-200"></div>
+            <div className="mb-8 w-full border-b border-gray-200 sm:mb-12 md:mb-16"></div>
           </div>
 
           {/* Content Sections - Contained Width */}
@@ -77,11 +80,11 @@ export default function AboutPage() {
             }`}
             style={{ transitionDelay: '400ms' }}
           >
-            <div className="w-full px-8 sm:px-16 lg:px-24 xl:px-32 2xl:px-48">
-              <div className="w-full space-y-32">
+            <div className="w-full px-4 sm:px-6 md:px-8 lg:px-16 xl:px-24 2xl:px-32">
+              <div className="w-full space-y-16 sm:space-y-20 md:space-y-24 lg:space-y-32">
                 {/* Artist Background Section */}
                 <div
-                  className={`flex flex-col items-start gap-x-6 gap-y-8 transition-all duration-800 ease-out lg:grid lg:grid-cols-12 lg:gap-x-12 lg:gap-y-12 ${
+                  className={`flex flex-col items-start gap-x-4 gap-y-6 transition-all duration-800 ease-out sm:gap-x-6 sm:gap-y-8 lg:grid lg:grid-cols-12 lg:gap-x-8 lg:gap-y-8 xl:gap-x-12 xl:gap-y-12 ${
                     isVisible
                       ? 'translate-y-0 scale-100 opacity-100'
                       : 'translate-y-12 scale-95 opacity-0'
@@ -89,9 +92,9 @@ export default function AboutPage() {
                   style={{ transitionDelay: '600ms' }}
                 >
                   <div className="w-full lg:col-span-5 xl:col-span-6">
-                    <div className="prose prose-lg lg:prose-xl w-full max-w-none">
+                    <div className="prose prose-sm sm:prose prose-lg lg:prose-xl w-full max-w-none">
                       <p
-                        className="mb-4 max-w-none text-base leading-relaxed text-gray-900 lg:mb-6 lg:text-lg"
+                        className="mb-3 max-w-none text-sm leading-relaxed text-gray-900 sm:mb-4 sm:text-base lg:mb-6 lg:text-lg"
                         style={{ fontFamily: 'Menlo', lineHeight: '1.7' }}
                       >
                         Aneira Thomas is a contemporary artist whose work explores the intricate
@@ -102,7 +105,7 @@ export default function AboutPage() {
                       </p>
 
                       <p
-                        className="max-w-none text-base leading-relaxed text-gray-900 lg:text-lg"
+                        className="max-w-none text-sm leading-relaxed text-gray-900 sm:text-base lg:text-lg"
                         style={{ fontFamily: 'Menlo', lineHeight: '1.7' }}
                       >
                         Her artistic journey began in childhood, sketching the changing seasons from
@@ -114,7 +117,7 @@ export default function AboutPage() {
                   </div>
 
                   <div className="order-first w-full lg:order-none lg:col-span-7 xl:col-span-6">
-                    <div className="relative aspect-[4/3] w-full overflow-hidden border-2 border-gray-200 lg:aspect-[3/2]">
+                    <div className="relative aspect-[4/3] w-full overflow-hidden border-2 border-gray-200 sm:aspect-[3/2]">
                       <Image
                         src="/static/images/AneiraWorking1.jpeg"
                         alt="Aneira Thomas in her studio, surrounded by natural materials and works in progress"
@@ -129,7 +132,7 @@ export default function AboutPage() {
 
                 {/* Connection to Nature Section */}
                 <div
-                  className={`flex flex-col items-start gap-x-6 gap-y-8 transition-all duration-800 ease-out lg:grid lg:grid-cols-12 lg:gap-x-12 lg:gap-y-12 ${
+                  className={`flex flex-col items-start gap-x-4 gap-y-6 transition-all duration-800 ease-out sm:gap-x-6 sm:gap-y-8 lg:grid lg:grid-cols-12 lg:gap-x-8 lg:gap-y-8 xl:gap-x-12 xl:gap-y-12 ${
                     isVisible
                       ? 'translate-y-0 scale-100 opacity-100'
                       : 'translate-y-12 scale-95 opacity-0'
@@ -137,16 +140,16 @@ export default function AboutPage() {
                   style={{ transitionDelay: '750ms' }}
                 >
                   <div className="w-full lg:col-span-5 xl:col-span-6">
-                    <div className="prose prose-lg lg:prose-xl w-full max-w-none">
+                    <div className="prose prose-sm sm:prose prose-lg lg:prose-xl w-full max-w-none">
                       <h2
-                        className={`${coveredByYourGrace.className} mb-4 max-w-none text-2xl lg:mb-6 lg:text-3xl`}
+                        className={`${coveredByYourGrace.className} mb-3 max-w-none text-xl sm:mb-4 sm:text-2xl lg:mb-6 lg:text-3xl`}
                         style={{ color: '#DED308' }}
                       >
                         Connection to Nature
                       </h2>
 
                       <p
-                        className="mb-4 max-w-none text-base leading-relaxed text-gray-900 lg:mb-6 lg:text-lg"
+                        className="mb-3 max-w-none text-sm leading-relaxed text-gray-900 sm:mb-4 sm:text-base lg:mb-6 lg:text-lg"
                         style={{ fontFamily: 'Menlo', lineHeight: '1.7' }}
                       >
                         Nature serves as both muse and teacher in Aneira's artistic practice. She
@@ -158,7 +161,7 @@ export default function AboutPage() {
                       </p>
 
                       <p
-                        className="max-w-none text-base leading-relaxed text-gray-900 lg:text-lg"
+                        className="max-w-none text-sm leading-relaxed text-gray-900 sm:text-base lg:text-lg"
                         style={{ fontFamily: 'Menlo', lineHeight: '1.7' }}
                       >
                         Her process often begins outdoors, where she collects fragments of bark,
@@ -171,7 +174,7 @@ export default function AboutPage() {
                   </div>
 
                   <div className="w-full lg:col-span-7 xl:col-span-6">
-                    <div className="relative aspect-[4/3] w-full overflow-hidden border-2 border-gray-200 lg:aspect-[3/2]">
+                    <div className="relative aspect-[4/3] w-full overflow-hidden border-2 border-gray-200 sm:aspect-[3/2]">
                       <Image
                         src="/static/images/AneiraWorking2.jpeg"
                         alt="Aneira Thomas working with natural materials in her creative process"
@@ -185,7 +188,7 @@ export default function AboutPage() {
 
                 {/* Philosophy Section */}
                 <div
-                  className={`flex flex-col items-start gap-x-6 gap-y-8 transition-all duration-800 ease-out lg:grid lg:grid-cols-12 lg:gap-x-12 lg:gap-y-12 ${
+                  className={`flex flex-col items-start gap-x-4 gap-y-6 transition-all duration-800 ease-out sm:gap-x-6 sm:gap-y-8 lg:grid lg:grid-cols-12 lg:gap-x-8 lg:gap-y-8 xl:gap-x-12 xl:gap-y-12 ${
                     isVisible
                       ? 'translate-y-0 scale-100 opacity-100'
                       : 'translate-y-12 scale-95 opacity-0'
@@ -193,16 +196,16 @@ export default function AboutPage() {
                   style={{ transitionDelay: '900ms' }}
                 >
                   <div className="w-full lg:col-span-5 xl:col-span-6">
-                    <div className="prose prose-lg lg:prose-xl w-full max-w-none">
+                    <div className="prose prose-sm sm:prose prose-lg lg:prose-xl w-full max-w-none">
                       <h2
-                        className={`${coveredByYourGrace.className} mb-4 max-w-none text-2xl lg:mb-6 lg:text-3xl`}
+                        className={`${coveredByYourGrace.className} mb-3 max-w-none text-xl sm:mb-4 sm:text-2xl lg:mb-6 lg:text-3xl`}
                         style={{ color: '#DED308' }}
                       >
                         Philosophy
                       </h2>
 
                       <p
-                        className="mb-4 max-w-none text-base leading-relaxed text-gray-900 lg:mb-6 lg:text-lg"
+                        className="mb-3 max-w-none text-sm leading-relaxed text-gray-900 sm:mb-4 sm:text-base lg:mb-6 lg:text-lg"
                         style={{ fontFamily: 'Menlo', lineHeight: '1.7' }}
                       >
                         At the heart of Aneira's work lies a belief that art can serve as a bridge
@@ -213,7 +216,7 @@ export default function AboutPage() {
                       </p>
 
                       <p
-                        className="max-w-none text-base leading-relaxed text-gray-900 lg:text-lg"
+                        className="max-w-none text-sm leading-relaxed text-gray-900 sm:text-base lg:text-lg"
                         style={{ fontFamily: 'Menlo', lineHeight: '1.7' }}
                       >
                         Through her ongoing exploration of texture, color, and form, Aneira
@@ -226,7 +229,7 @@ export default function AboutPage() {
                   </div>
 
                   <div className="order-first w-full lg:order-none lg:col-span-7 xl:col-span-6">
-                    <div className="relative aspect-[4/3] w-full overflow-hidden border-2 border-gray-200 lg:aspect-[3/2]">
+                    <div className="relative aspect-[4/3] w-full overflow-hidden border-2 border-gray-200 sm:aspect-[3/2]">
                       <Image
                         src="/static/images/AneiraWorking3.jpeg"
                         alt="Aneira Thomas in her artistic environment, connecting with nature-inspired elements"

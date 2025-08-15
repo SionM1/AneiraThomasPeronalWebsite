@@ -54,29 +54,32 @@ export default function GalleryPage() {
           style={{ width: '100vw' }}
         >
           {/* Aneira Thomas Header - Top Left Position (scrolls naturally) */}
-          <div className="absolute top-6 left-8 z-[60]">
-            <h1 className={`${coveredByYourGrace.className} text-5xl`} style={{ color: '#DED308' }}>
+          <div className="absolute top-4 left-4 z-[60] sm:top-6 sm:left-6 md:left-8">
+            <h1
+              className={`${coveredByYourGrace.className} text-2xl sm:text-3xl md:text-4xl lg:text-5xl`}
+              style={{ color: '#DED308' }}
+            >
               Aneira Thomas
             </h1>
           </div>
 
           {/* Section Title - Left Aligned with Divider */}
-          <div className="w-full px-8 pt-32 sm:px-16 lg:px-24 xl:px-32 2xl:px-48">
+          <div className="w-full px-4 pt-24 sm:px-6 sm:pt-28 md:px-8 md:pt-32 lg:px-16 lg:pt-32 xl:px-24 xl:pt-32 2xl:px-32">
             <div
-              className={`mb-12 w-full transition-all duration-1200 ease-out ${
+              className={`mb-8 w-full transition-all duration-1200 ease-out sm:mb-10 md:mb-12 ${
                 isVisible ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'
               }`}
               style={{ transitionDelay: '200ms' }}
             >
               <h2
-                className="mb-6 text-5xl md:text-6xl"
+                className="mb-4 text-3xl sm:mb-6 sm:text-4xl md:text-5xl lg:text-6xl"
                 style={{ color: '#DED308', fontFamily: 'Menlo', fontWeight: 'bold' }}
               >
                 Gallery
               </h2>
             </div>
             {/* Divider Line */}
-            <div className="mb-16 w-full border-b border-gray-200"></div>
+            <div className="mb-8 w-full border-b border-gray-200 sm:mb-12 md:mb-16"></div>
           </div>
 
           {/* Gallery Grid - Contained Width */}
@@ -86,8 +89,8 @@ export default function GalleryPage() {
             }`}
             style={{ transitionDelay: '400ms' }}
           >
-            <div className="w-full px-8 sm:px-16 lg:px-24 xl:px-32 2xl:px-48">
-              <div className="grid max-w-none grid-cols-1 gap-24 md:grid-cols-3">
+            <div className="w-full px-4 sm:px-6 md:px-8 lg:px-16 xl:px-24 2xl:px-32">
+              <div className="grid max-w-none grid-cols-1 gap-8 sm:grid-cols-2 sm:gap-12 md:gap-16 lg:grid-cols-3 lg:gap-20 xl:gap-24">
                 {artworks.map((artwork, index) => (
                   <div
                     key={artwork.slug}
@@ -101,7 +104,7 @@ export default function GalleryPage() {
                     }}
                   >
                     <div
-                      className="group relative cursor-pointer transition-transform duration-500 hover:scale-105"
+                      className="group touch-target relative cursor-pointer transition-transform duration-500 hover:scale-105"
                       onClick={() => navigateToArtwork(artwork.slug)}
                       role="button"
                       tabIndex={0}
@@ -116,13 +119,13 @@ export default function GalleryPage() {
                           alt={artwork.title}
                           fill
                           className="object-cover object-center"
-                          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                          priority={index < 3}
+                          sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
+                          priority={index < 6}
                         />
 
                         {/* Hover overlay, transparent by default */}
                         <div className="pointer-events-none absolute inset-0 flex items-center justify-center bg-transparent transition-colors duration-500 group-hover:bg-black/20">
-                          <span className="translate-y-2 bg-white/95 px-6 py-3 text-sm font-semibold text-black opacity-0 shadow-lg transition-all duration-500 group-hover:translate-y-0 group-hover:opacity-100">
+                          <span className="translate-y-2 bg-white/95 px-4 py-2 text-xs font-semibold text-black opacity-0 shadow-lg transition-all duration-500 group-hover:translate-y-0 group-hover:opacity-100 sm:px-6 sm:py-3 sm:text-sm">
                             View Artwork
                           </span>
                         </div>

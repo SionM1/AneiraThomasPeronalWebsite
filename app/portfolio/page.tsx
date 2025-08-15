@@ -7,15 +7,18 @@ const coveredByYourGrace = Covered_By_Your_Grace({
 
 export default function Portfolio() {
   return (
-    <div className="w-full py-16">
+    <div className="w-full py-12 sm:py-14 md:py-16">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <h1
-          className={`${coveredByYourGrace.className} mb-8 text-center text-6xl`}
+          className={`${coveredByYourGrace.className} mb-6 text-center text-3xl sm:mb-8 sm:text-4xl md:text-5xl lg:text-6xl`}
           style={{ color: '#DED308' }}
         >
           Portfolio
         </h1>
-        <p className="text-center text-lg text-gray-600" style={{ fontFamily: 'Menlo' }}>
+        <p
+          className="text-center text-base text-gray-600 sm:text-lg"
+          style={{ fontFamily: 'Menlo' }}
+        >
           Coming soon...
         </p>
       </div>

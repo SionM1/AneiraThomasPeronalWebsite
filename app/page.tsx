@@ -127,15 +127,15 @@ export default function Page() {
               <div
                 className={`absolute z-[60] transition-all duration-500 ease-out ${
                   isSliderVisible
-                    ? 'top-6 left-8'
+                    ? 'top-4 left-4 sm:top-6 sm:left-6 md:left-8'
                     : 'top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 transform'
                 }`}
               >
                 <h1
                   className={`${coveredByYourGrace.className} ${
                     isSliderVisible
-                      ? 'text-2xl sm:text-3xl md:text-4xl lg:text-5xl'
-                      : 'text-4xl sm:text-5xl md:text-6xl lg:text-8xl'
+                      ? 'text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl'
+                      : 'text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-8xl'
                   } transition-all duration-500 ease-out`}
                   style={{ color: '#DED308' }}
                 >
@@ -146,10 +146,16 @@ export default function Page() {
               {/* Navigation Arrows */}
               <button
                 onClick={prevSlide}
-                className="absolute top-1/2 left-8 z-50 flex h-16 w-16 -translate-y-1/2 transform items-center justify-center transition-all duration-300 hover:scale-110"
+                className="touch-target absolute top-1/2 left-2 z-50 flex h-12 w-12 -translate-y-1/2 transform items-center justify-center transition-all duration-300 hover:scale-110 sm:left-4 sm:h-14 sm:w-14 md:left-6 md:h-16 md:w-16 lg:left-8"
                 style={{ color: '#DED308' }}
+                aria-label="Previous image"
               >
-                <svg className="h-8 w-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg
+                  className="h-6 w-6 sm:h-7 sm:w-7 md:h-8 md:w-8"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
                   <path
                     strokeLinecap="round"
                     strokeLinejoin="round"
@@ -161,10 +167,16 @@ export default function Page() {
 
               <button
                 onClick={nextSlide}
-                className="absolute top-1/2 right-8 z-50 flex h-16 w-16 -translate-y-1/2 transform items-center justify-center transition-all duration-300 hover:scale-110"
+                className="touch-target absolute top-1/2 right-2 z-50 flex h-12 w-12 -translate-y-1/2 transform items-center justify-center transition-all duration-300 hover:scale-110 sm:right-4 sm:h-14 sm:w-14 md:right-6 md:h-16 md:w-16 lg:right-8"
                 style={{ color: '#DED308' }}
+                aria-label="Next image"
               >
-                <svg className="h-8 w-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg
+                  className="h-6 w-6 sm:h-7 sm:w-7 md:h-8 md:w-8"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
                   <path
                     strokeLinecap="round"
                     strokeLinejoin="round"

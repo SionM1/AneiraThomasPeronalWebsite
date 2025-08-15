@@ -8,55 +8,113 @@ const coveredByYourGrace = Covered_By_Your_Grace({
   subsets: ['latin'],
 })
 
-export const metadata: Metadata = genPageMetadata({ title: 'Exhibitions' })
+export const metadata: Metadata = genPageMetadata({ title: 'Exhibitions and Awards' })
 
-// Sample exhibition data - replace with your actual data
+// Exhibitions and Awards data
 const exhibitions = [
   {
     id: 1,
-    title: "Solo Exhibition: 'Chromatic Visions'",
-    venue: 'Modern Art Gallery, London',
-    date: 'June 2023',
-    description:
-      'A solo exhibition featuring a collection of abstract works exploring the relationship between color and emotion. The exhibition showcased 15 new paintings created over the course of two years.',
+    title: 'Confab, MFA final exhibition',
+    venue: 'CSAD, Cardiff Metropolitan University, CF5 2YB',
+    date: '11th-15th July 2025',
+    description: '',
     imagePath: '/static/images/gallery/CynffonYTan.jpeg',
-    link: '/exhibitions/chromatic-visions',
   },
   {
     id: 2,
-    title: "Group Show: 'New Perspectives'",
-    venue: 'Contemporary Arts Center, Cardiff',
-    date: 'March 2023',
-    description:
-      'A curated selection of works by emerging Welsh artists, examining themes of identity and place in contemporary society. Featured alongside five other notable artists from the region.',
+    title: 'Open 2025, BayArt exhibition',
+    venue: '54B/C Bute Street, Cardiff Bay, CF10 5AF',
+    date: '18th April-31st May 2025',
+    description: '',
     imagePath: '/static/images/gallery/Duckie.jpeg',
   },
   {
     id: 3,
-    title: "Annual Exhibition: 'Reflections'",
-    venue: 'Royal Academy of Arts, London',
-    date: 'November 2022',
-    description:
-      "Participated in this prestigious annual exhibition showcasing the best of contemporary British art. My piece 'Mapping the Changing Colours' was selected from over 3,000 submissions.",
+    title: 'The Hari x Woolff all-female exhibition, The Graduate Art Show',
+    venue: 'The Hari, 20 Chesham Place, London, SW1X 8HQ',
+    date: 'March-September 2025',
+    description: '',
     imagePath: '/static/images/gallery/MappingtheChangingColours.jpeg',
   },
   {
     id: 4,
-    title: 'International Art Fair',
-    venue: 'Saatchi Gallery, London',
-    date: 'September 2022',
-    description:
-      'Featured artist at this international art fair, presenting a series of works exploring themes of nature and transformation. The exhibition attracted collectors and art enthusiasts from around the world.',
+    title: 'Public Vote Emerging Art Prize Winner, New Blood Art',
+    venue: '',
+    date: '2025',
+    description: '',
     imagePath: '/static/images/gallery/SlugTrail.jpeg',
   },
   {
     id: 5,
-    title: 'Emerging Artists Showcase',
-    venue: 'Tate Modern, London',
-    date: 'May 2022',
-    description:
-      'Selected for this special showcase highlighting the work of promising emerging artists. The exhibition provided a platform for experimental approaches and innovative techniques.',
+    title: 'The Graduate Art Show, at the Woolff Gallery',
+    venue: '89 Charlotte St, London, W1T 4PU',
+    date: '15th November-3rd December 2024',
+    description: '',
     imagePath: '/static/images/gallery/WiltedOrchidNo.1.jpeg',
+  },
+  {
+    id: 6,
+    title: 'Circus, MFA mid year exhibition',
+    venue: 'Umbrella Gallery, Capitol Centre, CF10 2HQ',
+    date: '28th November-1st December 2024',
+    description: '',
+    imagePath: '/static/images/gallery/CynffonYTan.jpeg',
+  },
+  {
+    id: 7,
+    title: 'New Blood Art Emerging Art Prize 2024 Nomination+Shortlisted',
+    venue: '',
+    date: '2024',
+    description: '',
+    imagePath: '/static/images/gallery/Duckie.jpeg',
+  },
+  {
+    id: 8,
+    title: 'Helen Gregory Memorial Purchase Prize Award',
+    venue: '',
+    date: '2024',
+    description: '',
+    imagePath: '/static/images/gallery/MappingtheChangingColours.jpeg',
+  },
+  {
+    id: 9,
+    title: "I'w Barhau, Fine Art final degree show",
+    venue: 'CSAD, Cardiff Metropolitan University, CF5 2YB',
+    date: '7th-12th June 2024',
+    description: '',
+    imagePath: '/static/images/gallery/SlugTrail.jpeg',
+  },
+  {
+    id: 10,
+    title: 'Dahlia Art Collective Show',
+    venue: 'The Alcove Space, CSAD, Cardiff Metropolitan University, CF5 2YB',
+    date: '15th-19th April 2024',
+    description: '',
+    imagePath: '/static/images/gallery/WiltedOrchidNo.1.jpeg',
+  },
+  {
+    id: 11,
+    title: 'Undod, Fine Art Level 6 winter exhibition',
+    venue: '54B/C Bute Street, Cardiff Bay, CF10 5AF',
+    date: '8th-10th December 2023',
+    description: '',
+    imagePath: '/static/images/gallery/CynffonYTan.jpeg',
+  },
+  {
+    id: 12,
+    title: 'Everything but the kitchen sink, Fine Art+Photography Level 5 end of year exhibition',
+    venue: 'Umbrella Gallery, Capitol Centre, CF10 2HQ',
+    date: '4th-5th April 2023',
+    description: '',
+    imagePath: '/static/images/gallery/Duckie.jpeg',
+  },
+  {
+    id: 13,
+    title: 'Bysedd Mochyn, Fine Art Level 4 end of year exhibition',
+    venue: 'Umbrella Gallery, Capitol Centre, CF10 2HQ',
+    date: '13th-15th May 2022',
+    description: '',
+    imagePath: '/static/images/gallery/MappingtheChangingColours.jpeg',
   },
 ]
 
@@ -65,22 +123,25 @@ export default function ExhibitionsPage() {
     <>
       {/* Exhibitions Section - Break Out of SectionContainer */}
       <div className="absolute left-1/2 w-screen -translate-x-1/2 transform">
-        <div className="w-full bg-white py-24" style={{ width: '100vw' }}>
+        <div className="w-full bg-white py-16 sm:py-24" style={{ width: '100vw' }}>
           {/* Aneira Thomas Header - Top Left Position (scrolls naturally) */}
-          <div className="absolute top-6 left-8 z-[60]">
-            <h1 className={`${coveredByYourGrace.className} text-5xl`} style={{ color: '#DED308' }}>
+          <div className="absolute top-4 left-4 z-[60] sm:top-6 sm:left-8">
+            <h1
+              className={`${coveredByYourGrace.className} text-3xl sm:text-4xl md:text-5xl`}
+              style={{ color: '#DED308' }}
+            >
               Aneira Thomas
             </h1>
           </div>
 
           {/* Section Title - Left Aligned with Divider */}
-          <div className="w-full px-8 pt-32 sm:px-16 lg:px-24 xl:px-32 2xl:px-48">
+          <div className="w-full px-4 pt-32 sm:px-8 md:px-16 lg:px-24 xl:px-32 2xl:px-48">
             <div className="mb-12 w-full">
               <h2
-                className="mb-6 text-5xl md:text-6xl"
+                className="mb-6 text-3xl sm:text-4xl md:text-5xl lg:text-6xl"
                 style={{ color: '#DED308', fontFamily: 'Menlo', fontWeight: 'bold' }}
               >
-                Exhibitions
+                Exhibitions and Awards
               </h2>
             </div>
             {/* Divider Line */}
