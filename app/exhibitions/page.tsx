@@ -18,7 +18,7 @@ const exhibitions = [
     venue: 'CSAD, Cardiff Metropolitan University, CF5 2YB',
     date: '11th-15th July 2025',
     description: '',
-    imagePath: '/static/images/gallery/CynffonYTan.jpeg',
+    imagePath: '/static/images/Website exhibition posters/Confab.JPG',
   },
   {
     id: 2,
@@ -26,7 +26,7 @@ const exhibitions = [
     venue: '54B/C Bute Street, Cardiff Bay, CF10 5AF',
     date: '18th April-31st May 2025',
     description: '',
-    imagePath: '/static/images/gallery/Duckie.jpeg',
+    imagePath: '/static/images/Website exhibition posters/poster open call 2025.JPEG',
   },
   {
     id: 3,
@@ -34,7 +34,8 @@ const exhibitions = [
     venue: 'The Hari, 20 Chesham Place, London, SW1X 8HQ',
     date: 'March-September 2025',
     description: '',
-    imagePath: '/static/images/gallery/MappingtheChangingColours.jpeg',
+    imagePath:
+      '/static/images/Website exhibition posters/The Hari x Woolff all-female exhibition.JPG',
   },
   {
     id: 4,
@@ -42,7 +43,8 @@ const exhibitions = [
     venue: '',
     date: '2025',
     description: '',
-    imagePath: '/static/images/gallery/SlugTrail.jpeg',
+    imagePath:
+      '/static/images/Website exhibition posters/New Blood Art Emerging Art Prize 2024 Nomination.JPG',
   },
   {
     id: 5,
@@ -50,7 +52,8 @@ const exhibitions = [
     venue: '89 Charlotte St, London, W1T 4PU',
     date: '15th November-3rd December 2024',
     description: '',
-    imagePath: '/static/images/gallery/WiltedOrchidNo.1.jpeg',
+    imagePath:
+      '/static/images/Website exhibition posters/The Hari x Woolff all-female exhibition.JPG',
   },
   {
     id: 6,
@@ -58,7 +61,7 @@ const exhibitions = [
     venue: 'Umbrella Gallery, Capitol Centre, CF10 2HQ',
     date: '28th November-1st December 2024',
     description: '',
-    imagePath: '/static/images/gallery/CynffonYTan.jpeg',
+    imagePath: '/static/images/Website exhibition posters/Circus, MFA mid year exhibitio.JPG',
   },
   {
     id: 7,
@@ -66,7 +69,8 @@ const exhibitions = [
     venue: '',
     date: '2024',
     description: '',
-    imagePath: '/static/images/gallery/Duckie.jpeg',
+    imagePath:
+      '/static/images/Website exhibition posters/New Blood Art Emerging Art Prize 2024 Nomination.JPG',
   },
   {
     id: 8,
@@ -74,7 +78,8 @@ const exhibitions = [
     venue: '',
     date: '2024',
     description: '',
-    imagePath: '/static/images/gallery/MappingtheChangingColours.jpeg',
+    imagePath:
+      '/static/images/Website exhibition posters/Helen Gregory Memorial Purchase Prize Award.jpeg',
   },
   {
     id: 9,
@@ -90,7 +95,7 @@ const exhibitions = [
     venue: 'The Alcove Space, CSAD, Cardiff Metropolitan University, CF5 2YB',
     date: '15th-19th April 2024',
     description: '',
-    imagePath: '/static/images/gallery/WiltedOrchidNo.1.jpeg',
+    imagePath: '/static/images/Website exhibition posters/Dahlia Art Collective Show.jpg',
   },
   {
     id: 11,
@@ -98,7 +103,8 @@ const exhibitions = [
     venue: '54B/C Bute Street, Cardiff Bay, CF10 5AF',
     date: '8th-10th December 2023',
     description: '',
-    imagePath: '/static/images/gallery/CynffonYTan.jpeg',
+    imagePath:
+      '/static/images/Website exhibition posters/Undod, Fine Art Level 6 winter exhibition.JPG',
   },
   {
     id: 12,
@@ -106,7 +112,7 @@ const exhibitions = [
     venue: 'Umbrella Gallery, Capitol Centre, CF10 2HQ',
     date: '4th-5th April 2023',
     description: '',
-    imagePath: '/static/images/gallery/Duckie.jpeg',
+    imagePath: '/static/images/Website exhibition posters/Everything but the kitchen sink.JPG',
   },
   {
     id: 13,
@@ -120,43 +126,37 @@ const exhibitions = [
 
 export default function ExhibitionsPage() {
   return (
-    <>
-      {/* Exhibitions Section - Break Out of SectionContainer */}
-      <div className="absolute left-1/2 w-screen -translate-x-1/2 transform">
-        <div className="w-full bg-white py-16 sm:py-24" style={{ width: '100vw' }}>
-          {/* Aneira Thomas Header - Top Left Position (scrolls naturally) */}
-          <div className="absolute top-4 left-4 z-[60] sm:top-6 sm:left-8">
-            <h1
-              className={`${coveredByYourGrace.className} text-3xl sm:text-4xl md:text-5xl`}
-              style={{ color: '#DED308' }}
+    <div className="relative left-1/2 min-h-screen w-screen -translate-x-1/2 transform">
+      <div className="w-full bg-white py-16 sm:py-24" style={{ width: '100vw' }}>
+        {/* Aneira Thomas Header - Top Left Position (scrolls naturally) */}
+        <div className="absolute top-4 left-4 z-[60] sm:top-6 sm:left-8">
+          <h1
+            className={`${coveredByYourGrace.className} text-3xl sm:text-4xl md:text-5xl`}
+            style={{ color: '#DED308' }}
+          >
+            Aneira Thomas
+          </h1>
+        </div>
+
+        {/* Section Title - Left Aligned with Divider */}
+        <div className="w-full px-4 pt-32 sm:px-8 md:px-16 lg:px-24 xl:px-32 2xl:px-48">
+          <div className="mb-12 w-full">
+            <h2
+              className="mb-6 text-3xl sm:text-4xl md:text-5xl lg:text-6xl"
+              style={{ color: '#DED308', fontFamily: 'Menlo', fontWeight: 'bold' }}
             >
-              Aneira Thomas
-            </h1>
+              Exhibitions and Awards
+            </h2>
           </div>
+          {/* Divider Line */}
+          <div className="mb-16 w-full border-b border-gray-200"></div>
+        </div>
 
-          {/* Section Title - Left Aligned with Divider */}
-          <div className="w-full px-4 pt-32 sm:px-8 md:px-16 lg:px-24 xl:px-32 2xl:px-48">
-            <div className="mb-12 w-full">
-              <h2
-                className="mb-6 text-3xl sm:text-4xl md:text-5xl lg:text-6xl"
-                style={{ color: '#DED308', fontFamily: 'Menlo', fontWeight: 'bold' }}
-              >
-                Exhibitions and Awards
-              </h2>
-            </div>
-            {/* Divider Line */}
-            <div className="mb-16 w-full border-b border-gray-200"></div>
-          </div>
-
-          {/* Timeline Content */}
-          <div className="w-full">
-            <ExhibitionTimeline exhibitions={exhibitions} />
-          </div>
+        {/* Timeline Content */}
+        <div className="w-full">
+          <ExhibitionTimeline exhibitions={exhibitions} />
         </div>
       </div>
-
-      {/* Spacer to maintain layout flow */}
-      <div className="min-h-screen"></div>
-    </>
+    </div>
   )
 }

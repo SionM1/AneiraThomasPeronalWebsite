@@ -35,18 +35,31 @@ export default function ContactForm() {
     setIsSubmitting(true)
     setSubmitStatus('idle')
 
-    // Simulate form submission - replace with actual submission logic
     try {
-      await new Promise((resolve) => setTimeout(resolve, 1000)) // Simulate API call
-      setSubmitStatus('success')
-      setFormData({
-        name: '',
-        email: '',
-        subject: '',
-        message: '',
-        inquiryType: 'general',
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
       })
+
+      if (response.ok) {
+        setSubmitStatus('success')
+        setFormData({
+          name: '',
+          email: '',
+          subject: '',
+          message: '',
+          inquiryType: 'general',
+        })
+      } else {
+        const errorData = await response.json()
+        console.error('Form submission error:', errorData)
+        setSubmitStatus('error')
+      }
     } catch (error) {
+      console.error('Form submission error:', error)
       setSubmitStatus('error')
     } finally {
       setIsSubmitting(false)
@@ -116,7 +129,7 @@ export default function ContactForm() {
             name="inquiryType"
             value={formData.inquiryType}
             onChange={handleChange}
-            className="w-full border border-gray-300 px-4 py-3 transition-colors focus:border-transparent focus:ring-2 focus:ring-teal-500"
+            className="w-full border border-gray-300 px-4 py-3 transition-colors focus:border-transparent focus:ring-2 focus:ring-[#DED308]"
           >
             <option value="general">General Inquiry</option>
             <option value="commission">Commission Request</option>
@@ -138,7 +151,7 @@ export default function ContactForm() {
             required
             value={formData.subject}
             onChange={handleChange}
-            className="w-full border border-gray-300 px-4 py-3 transition-colors focus:border-transparent focus:ring-2 focus:ring-teal-500"
+            className="w-full border border-gray-300 px-4 py-3 transition-colors focus:border-transparent focus:ring-2 focus:ring-[#DED308]"
             placeholder="Brief subject line"
           />
         </div>
@@ -155,7 +168,7 @@ export default function ContactForm() {
             rows={6}
             value={formData.message}
             onChange={handleChange}
-            className="w-full border border-gray-300 px-4 py-3 transition-colors focus:border-transparent focus:ring-2 focus:ring-teal-500"
+            className="w-full border border-gray-300 px-4 py-3 transition-colors focus:border-transparent focus:ring-2 focus:ring-[#DED308]"
             placeholder="Tell me about your project or inquiry..."
           />
         </div>
