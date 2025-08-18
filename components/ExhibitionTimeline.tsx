@@ -64,8 +64,8 @@ export default function ExhibitionTimeline({ exhibitions }: ExhibitionTimelinePr
         })
       },
       {
-        threshold: 0.3,
-        rootMargin: '-10% 0px -40% 0px',
+        threshold: 0.1,
+        rootMargin: '0% 0px -20% 0px',
       }
     )
 
@@ -162,7 +162,7 @@ export default function ExhibitionTimeline({ exhibitions }: ExhibitionTimelinePr
   const totalSVGHeight = (exhibitions.length + 1) * 300 + 100
 
   return (
-    <div className="w-full py-8 pb-32 sm:py-12" ref={timelineRef}>
+    <div className="w-full py-8 pb-64 sm:py-12" ref={timelineRef}>
       <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="lg:grid lg:grid-cols-12 lg:gap-8">
           {/* Left Column - Dynamic Winding Line */}
@@ -265,7 +265,7 @@ export default function ExhibitionTimeline({ exhibitions }: ExhibitionTimelinePr
 
           {/* Right Column - Exhibition Cards */}
           <div className="lg:col-span-10">
-            <div className="space-y-32">
+            <div className="space-y-24 sm:space-y-32">
               {exhibitions.map((exhibition, index) => {
                 const isCurrentlyVisible = visibleSections.includes(exhibition.id)
                 const hasBeenVisible = permanentlyVisible.includes(exhibition.id) // Check if it has ever been visible
@@ -288,23 +288,23 @@ export default function ExhibitionTimeline({ exhibitions }: ExhibitionTimelinePr
                         isCurrentlyVisible ? 'ring-2 ring-[#DED308]/20' : '' // Optional: add subtle ring when currently in view
                       }`}
                     >
-                      <div className="lg:flex">
-                        <div className="lg:w-1/4">
-                          <div className="relative h-48 overflow-hidden sm:h-60 lg:h-full">
+                      <div className="flex flex-col lg:flex-row">
+                        <div className="w-full lg:w-1/3 xl:w-1/4">
+                          <div className="relative aspect-[3/4] w-full overflow-hidden bg-gray-100 sm:aspect-[4/5] md:aspect-[3/4]">
                             <Image
                               src={
                                 exhibition.imagePath || '/static/images/placeholder-exhibition.jpg'
                               }
                               alt={exhibition.title}
                               fill
-                              className="object-cover transition-transform duration-700 group-hover:scale-110"
-                              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 100vw, 25vw"
+                              className="object-contain transition-transform duration-700 group-hover:scale-105"
+                              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                             />
-                            <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/10 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
                           </div>
                         </div>
 
-                        <div className="p-4 sm:p-6 lg:w-3/4 lg:p-8">
+                        <div className="flex-1 p-4 sm:p-6 lg:p-8">
                           <div className="mb-4 flex flex-col lg:flex-row lg:items-start lg:justify-between">
                             <div className="flex-1">
                               <h3 className="mb-2 text-xl font-bold text-gray-900 italic transition-colors duration-300 group-hover:text-[#DED308] sm:text-2xl">
