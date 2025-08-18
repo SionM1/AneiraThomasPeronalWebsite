@@ -34,8 +34,7 @@ const exhibitions = [
     venue: 'The Hari, 20 Chesham Place, London, SW1X 8HQ',
     date: 'March-September 2025',
     description: '',
-    imagePath:
-      '/static/images/Website exhibition posters/The Hari x Woolff all-female exhibition.JPG',
+    imagePath: '/static/images/Website exhibition posters/TheHarixWoolff.JPG',
   },
   {
     id: 4,
@@ -52,8 +51,7 @@ const exhibitions = [
     venue: '89 Charlotte St, London, W1T 4PU',
     date: '15th November-3rd December 2024',
     description: '',
-    imagePath:
-      '/static/images/Website exhibition posters/The Hari x Woolff all-female exhibition.JPG',
+    imagePath: '/static/images/Website exhibition posters/thehari.jpg',
   },
   {
     id: 6,
@@ -87,7 +85,7 @@ const exhibitions = [
     venue: 'CSAD, Cardiff Metropolitan University, CF5 2YB',
     date: '7th-12th June 2024',
     description: '',
-    imagePath: '/static/images/gallery/SlugTrail.jpeg',
+    imagePath: '/static/images/Website exhibition posters/iwbarhau.jpg',
   },
   {
     id: 10,
@@ -120,7 +118,7 @@ const exhibitions = [
     venue: 'Umbrella Gallery, Capitol Centre, CF10 2HQ',
     date: '13th-15th May 2022',
     description: '',
-    imagePath: '/static/images/gallery/MappingtheChangingColours.jpeg',
+    imagePath: '/static/images/Website exhibition posters/Byseddmochyn.webp',
   },
 ]
 
