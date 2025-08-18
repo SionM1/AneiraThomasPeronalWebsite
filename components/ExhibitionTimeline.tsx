@@ -73,7 +73,6 @@ export default function ExhibitionTimeline({ exhibitions }: ExhibitionTimelinePr
       if (ref) observer.observe(ref)
     })
 
-    // Replace the handleScroll function with this version that handles short delays properly:
     const handleScroll = () => {
       if (!timelineRef.current) return
 
@@ -83,33 +82,16 @@ export default function ExhibitionTimeline({ exhibitions }: ExhibitionTimelinePr
 
       let progress = 0
 
-      if (rect.top < windowHeight && rect.bottom > 0) {
-        // Timeline is visible
-        const visibleTop = Math.max(0, -rect.top)
-        const visibleHeight = Math.min(rect.height, windowHeight - Math.max(0, rect.top))
+      // Start when timeline starts entering viewport
+      if (rect.top <= windowHeight) {
+        // Calculate how much of the timeline has been scrolled through
+        const scrolledAmount = windowHeight - rect.top
 
-        // Calculate total scroll distance from when timeline first becomes visible
-        const timelineEntryPoint = Math.max(0, windowHeight - rect.height)
-        const totalScrolled = windowHeight - rect.top
-        const adjustedScrolled = Math.max(0, totalScrolled - timelineEntryPoint)
+        // The total scrollable distance is the height of timeline plus one viewport height
+        const totalScrollDistance = rect.height + windowHeight
 
-        // FIXED: Use adjusted scroll calculation for better short delay handling
-        if (adjustedScrolled < ANIMATION_CONFIG.startDelay) {
-          progress = 0 // Don't start until we've scrolled past the delay
-          console.log('DELAYED - not starting yet')
-        } else {
-          // Calculate progress starting from the delay point
-          const scrolledPastDelay = adjustedScrolled - ANIMATION_CONFIG.startDelay
-          const totalScrollableHeight = rect.height + windowHeight - ANIMATION_CONFIG.startDelay
-          const rawProgress = scrolledPastDelay / totalScrollableHeight
-
-          // Apply easing curve (starts slow, accelerates)
-          const easedProgress = Math.pow(rawProgress, ANIMATION_CONFIG.easingPower)
-
-          // Apply speed multiplier
-          progress = Math.min(1, Math.max(0, easedProgress * ANIMATION_CONFIG.speedMultiplier))
-          console.log('STARTED - scrolledPastDelay:', scrolledPastDelay)
-        }
+        // Calculate raw progress (0 to 1)
+        progress = Math.max(0, Math.min(1, scrolledAmount / totalScrollDistance))
       }
 
       setScrollProgress(progress)
@@ -220,8 +202,8 @@ export default function ExhibitionTimeline({ exhibitions }: ExhibitionTimelinePr
                   const isHighlighted = highlightedId === exhibition.id
                   const isVisible = visibleSections.includes(exhibition.id)
 
-                  // Node appears when line reaches it
-                  const nodeThreshold = ((index + 1) / exhibitions.length) * 0.8
+                  // Node appears when line reaches it - evenly distributed
+                  const nodeThreshold = (index + 1) / exhibitions.length
                   const isRevealed = scrollProgress >= nodeThreshold
 
                   return (
