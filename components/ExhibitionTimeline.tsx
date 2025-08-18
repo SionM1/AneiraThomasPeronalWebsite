@@ -1,10 +1,9 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 
-// Exhibition data interface
 interface Exhibition {
   id: number
   title: string
@@ -14,229 +13,194 @@ interface Exhibition {
   imagePath: string
   link?: string
 }
-
 interface ExhibitionTimelineProps {
   exhibitions: Exhibition[]
 }
 
 export default function ExhibitionTimeline({ exhibitions }: ExhibitionTimelineProps) {
-  const [visibleSections, setVisibleSections] = useState<number[]>([])
-  const [permanentlyVisible, setPermanentlyVisible] = useState<number[]>([]) // New state for permanent visibility
-  const sectionRefs = useRef<(HTMLDivElement | null)[]>([])
-  const [scrollProgress, setScrollProgress] = useState(0)
+  // refs
   const timelineRef = useRef<HTMLDivElement>(null)
-  const [highlightedId, setHighlightedId] = useState<number | null>(null)
   const pathRef = useRef<SVGPathElement>(null)
-  const [pathLength, setPathLength] = useState(0)
+  const sectionRefs = useRef<(HTMLDivElement | null)[]>([])
+  sectionRefs.current = sectionRefs.current.slice(0, exhibitions.length)
 
-  // ADJUSTABLE PARAMETERS - Change these to control the animation
-  const ANIMATION_CONFIG = {
-    startDelay: 300, // pixels - how much to scroll before line starts drawing
-    speedMultiplier: 1.7, // overall speed multiplier (1.0 = normal, 2.0 = 2x faster)
-    easingPower: 1.0, // curve steepness (1.0 = linear, 2.0 = quadratic, 3.0 = cubic)
-    // Higher easingPower = starts slower, ends faster
-  }
+  // drawing + reveal state
+  const [pathLen, setPathLen] = useState(1)
+  const [progress, setProgress] = useState(0) // 0..1
+  const [stops, setStops] = useState<number[]>([]) // per-card thresholds (0..1)
+  const [highlight, setHighlight] = useState<number | null>(null)
 
-  useEffect(() => {
-    sectionRefs.current = sectionRefs.current.slice(0, exhibitions.length)
+  // config (tweak freely)
+  const EASING_POWER = 1.6 // 1 = linear, >1 = starts slower, ends faster
+  const STICKY_TOP = 72 // px; matches your header spacing
+  const NODE_LEAD = 0.0 // reveal a hair early (e.g. -0.02 to lead by 2%)
 
-    // Get the actual path length for accurate animation
-    if (pathRef.current) {
-      const length = pathRef.current.getTotalLength()
-      setPathLength(length)
-    }
+  // --- build the bezier path (left gutter) ---
+  // spacing is responsive: a bit tighter on small screens
+  const SPACING =
+    typeof window === 'undefined'
+      ? 300
+      : window.innerWidth < 640
+        ? 230
+        : window.innerWidth < 1024
+          ? 260
+          : 300
 
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          const id = parseInt(entry.target.getAttribute('data-id') || '0')
-          if (entry.isIntersecting) {
-            // Add to visible sections for highlighting
-            setVisibleSections((prev) => (prev.includes(id) ? prev : [...prev, id]))
-            setHighlightedId(id)
+  const AMPLITUDE = 60
+  const CENTER_X = 60
 
-            // Add to permanently visible (once visible, always visible)
-            setPermanentlyVisible((prev) => (prev.includes(id) ? prev : [...prev, id]))
-          } else {
-            // Remove from current visible (for highlighting) but keep in permanent
-            setVisibleSections((prev) => prev.filter((visibleId) => visibleId !== id))
-          }
-        })
-      },
-      {
-        threshold: 0.1,
-        rootMargin: '-10% 0px -40% 0px',
-      }
-    )
-
-    sectionRefs.current.forEach((ref) => {
-      if (ref) observer.observe(ref)
+  const d = useMemo(() => {
+    let p = `M${CENTER_X},${SPACING * 0.2}`
+    exhibitions.forEach((_, i) => {
+      const y = (i + 1) * SPACING + SPACING * 0.2
+      const even = i % 2 === 0
+      const c1x = CENTER_X + (even ? AMPLITUDE : -AMPLITUDE)
+      const c1y = y - SPACING * 0.7
+      const c2x = CENTER_X + (even ? AMPLITUDE * 0.5 : -AMPLITUDE * 0.5)
+      const c2y = y - SPACING * 0.3
+      p += ` C${c1x},${c1y} ${c2x},${c2y} ${CENTER_X},${y}`
     })
+    return p
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [exhibitions.length, SPACING])
 
-    const handleScroll = () => {
-      if (!timelineRef.current) return
+  const totalSvgH = useMemo(
+    () => (exhibitions.length + 1) * SPACING + 120,
+    [exhibitions.length, SPACING]
+  )
 
-      const timeline = timelineRef.current
-      const rect = timeline.getBoundingClientRect()
-      const windowHeight = window.innerHeight
+  // measure path length once d is known
+  useLayoutEffect(() => {
+    if (pathRef.current) setPathLen(pathRef.current.getTotalLength() || 1)
+  }, [d])
 
-      let progress = 0
+  // compute scroll → progress + per-card reveal thresholds
+  useEffect(() => {
+    if (!timelineRef.current) return
 
-      // Start when timeline starts entering viewport
-      if (rect.top <= windowHeight) {
-        // Calculate how much of the timeline has been scrolled through
-        const scrolledAmount = windowHeight - rect.top
+    const measure = () => {
+      const tRect = timelineRef.current!.getBoundingClientRect()
+      const docTop = window.scrollY + tRect.top
+      const docBottom = docTop + tRect.height
 
-        // The total scrollable distance is the height of timeline plus one viewport height
-        const totalScrollDistance = rect.height + windowHeight
-
-        // Calculate raw progress (0 to 1)
-        progress = Math.max(0, Math.min(1, scrolledAmount / totalScrollDistance))
-      }
-
-      setScrollProgress(progress)
+      // map each card top → progress stop [0..1]
+      const cardStops = sectionRefs.current.map((el) => {
+        if (!el) return 1
+        const r = el.getBoundingClientRect()
+        const y = window.scrollY + r.top
+        const stop = (y - docTop) / Math.max(1, docBottom - docTop)
+        return Math.min(1, Math.max(0, stop))
+      })
+      setStops(cardStops)
+      // also snap current progress after measuring
+      updateProgress(docTop, docBottom)
     }
 
-    window.addEventListener('scroll', handleScroll, { passive: true })
-    handleScroll() // Initial call
+    const updateProgress = (docTop: number, docBottom: number) => {
+      const s = window.scrollY + STICKY_TOP // start when timeline reaches sticky top
+      const p = (s - docTop) / Math.max(1, docBottom - docTop)
+      setProgress(Math.min(1, Math.max(0, p)))
+    }
 
+    let raf = 0
+    const onScroll = () => {
+      raf =
+        raf ||
+        requestAnimationFrame(() => {
+          const rect = timelineRef.current!.getBoundingClientRect()
+          const docTop = window.scrollY + rect.top
+          const docBottom = docTop + rect.height
+          updateProgress(docTop, docBottom)
+          raf = 0
+        })
+    }
+
+    const onResize = () => measure()
+
+    measure()
+    window.addEventListener('scroll', onScroll, { passive: true })
+    window.addEventListener('resize', onResize)
     return () => {
-      observer.disconnect()
-      window.removeEventListener('scroll', handleScroll)
+      window.removeEventListener('scroll', onScroll)
+      window.removeEventListener('resize', onResize)
+      if (raf) cancelAnimationFrame(raf)
     }
   }, [exhibitions.length])
 
-  // Generate the winding path for the SVG
-  const generateWindingPath = () => {
-    const spacing = 300
-    const amplitude = 60
-    const centerX = 60
+  // eased progress for the stroke animation
+  const eased = useMemo(() => Math.pow(progress, EASING_POWER), [progress])
 
-    let path = `M${centerX},50`
-
-    exhibitions.forEach((_, index) => {
-      const y = (index + 1) * spacing + 50
-      const isEven = index % 2 === 0
-
-      const controlX1 = centerX + (isEven ? amplitude : -amplitude)
-      const controlY1 = y - spacing * 0.7
-      const controlX2 = centerX + (isEven ? amplitude * 0.5 : -amplitude * 0.5)
-      const controlY2 = y - spacing * 0.3
-      const endX = centerX
-      const endY = y
-
-      path += ` C${controlX1},${controlY1} ${controlX2},${controlY2} ${endX},${endY}`
-    })
-
-    return path
-  }
-
-  const getMarkerPosition = (index: number) => {
-    const spacing = 300
-    const centerX = 60
-
-    return {
-      x: centerX,
-      y: (index + 1) * spacing + 50,
-    }
-  }
-
-  const totalSVGHeight = (exhibitions.length + 1) * 300 + 100
+  // intersection just to pick a “current” highlight (optional)
+  useEffect(() => {
+    const io = new IntersectionObserver(
+      (entries) =>
+        entries.forEach((e) => {
+          const id = Number(e.target.getAttribute('data-id') || 0)
+          if (e.isIntersecting) setHighlight(id)
+        }),
+      { rootMargin: `-${STICKY_TOP}px 0px -50% 0px`, threshold: 0.01 }
+    )
+    sectionRefs.current.forEach((el) => el && io.observe(el))
+    return () => io.disconnect()
+  }, [])
 
   return (
-    <div className="w-full py-8 pb-32 sm:py-12" ref={timelineRef}>
+    <div ref={timelineRef} className="w-full py-8 pb-28 sm:py-12">
       <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="lg:grid lg:grid-cols-12 lg:gap-8">
-          {/* Left Column - Dynamic Winding Line */}
-          <div className="hidden lg:col-span-2 lg:block">
-            <div className="sticky top-8">
-              <svg
-                width="120"
-                height={totalSVGHeight}
-                viewBox={`0 0 120 ${totalSVGHeight}`}
-                className="w-full"
-              >
-                {/* Hidden reference path */}
+        <div className="grid grid-cols-12 gap-6 lg:gap-8">
+          {/* Left gutter SVG – visible from sm+; sticky so it tracks the scroll */}
+          <div className="col-span-2 hidden sm:block">
+            <div className="sticky" style={{ top: STICKY_TOP }}>
+              <svg width="120" height={totalSvgH} viewBox={`0 0 120 ${totalSvgH}`}>
+                {/* measuring path (hidden) */}
+                <path ref={pathRef} d={d} fill="none" stroke="none" />
+                {/* trail */}
+                <path d={d} fill="none" stroke="#E5E7EB" strokeWidth="2" className="opacity-30" />
+                {/* active stroke */}
                 <path
-                  ref={pathRef}
-                  d={generateWindingPath()}
-                  stroke="none"
+                  d={d}
                   fill="none"
-                  style={{ visibility: 'hidden' }}
-                />
-
-                {/* Background path */}
-                <path
-                  d={generateWindingPath()}
-                  stroke="#E5E7EB"
-                  strokeWidth="2"
-                  fill="none"
-                  className="opacity-20"
-                />
-
-                {/* Animated path - draws with easing curve */}
-                <path
-                  d={generateWindingPath()}
-                  stroke="url(#gradient)"
+                  stroke="url(#grad)"
                   strokeWidth="4"
-                  fill="none"
-                  strokeDasharray={pathLength}
-                  strokeDashoffset={pathLength * (1 - scrollProgress)}
-                  className="transition-none"
-                  style={{
-                    filter: 'drop-shadow(0 2px 4px rgba(48, 35, 188, 0.3))',
-                  }}
+                  strokeDasharray={pathLen}
+                  strokeDashoffset={pathLen * (1 - eased)}
+                  style={{ filter: 'drop-shadow(0 2px 4px rgba(48,35,188,0.25))' }}
                 />
-
                 <defs>
-                  <linearGradient id="gradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                  <linearGradient id="grad" x1="0%" y1="0%" x2="0%" y2="100%">
                     <stop offset="0%" stopColor="#DED308" />
-                    <stop offset="50%" stopColor="#DED308" />
                     <stop offset="100%" stopColor="#C4BB07" />
                   </linearGradient>
                 </defs>
 
-                {/* Circle markers */}
-                {exhibitions.map((exhibition, index) => {
-                  const position = getMarkerPosition(index)
-                  const isHighlighted = highlightedId === exhibition.id
-                  const isVisible = visibleSections.includes(exhibition.id)
-
-                  // Node appears when line reaches it - evenly distributed
-                  const nodeThreshold = (index + 1) / exhibitions.length
-                  const isRevealed = scrollProgress >= nodeThreshold
+                {/* nodes */}
+                {exhibitions.map((ex, i) => {
+                  const y = (i + 1) * SPACING + SPACING * 0.2
+                  const x = CENTER_X
+                  const revealed = eased >= stops[i] + NODE_LEAD
+                  const isHot = highlight === ex.id
 
                   return (
-                    <g key={exhibition.id}>
+                    <g key={ex.id}>
                       <circle
-                        cx={position.x}
-                        cy={position.y}
+                        cx={x}
+                        cy={y}
                         r="12"
+                        fill="none"
                         stroke="#DED308"
                         strokeWidth="2"
-                        fill="none"
-                        className={`transition-all duration-500 ${
-                          isRevealed ? 'scale-100 opacity-60' : 'scale-0 opacity-0'
-                        }`}
-                        style={{ transformOrigin: `${position.x}px ${position.y}px` }}
+                        className={`transition-all duration-500 ${revealed ? 'scale-100 opacity-60' : 'scale-0 opacity-0'}`}
+                        style={{ transformOrigin: `${x}px ${y}px` }}
                       />
-
                       <circle
-                        cx={position.x}
-                        cy={position.y}
+                        cx={x}
+                        cy={y}
                         r="8"
                         stroke="#DED308"
                         strokeWidth="3"
-                        fill={isRevealed ? (isHighlighted ? '#DED308' : 'white') : 'transparent'}
-                        className={`transition-all duration-500 ${
-                          isRevealed ? 'scale-100 opacity-100' : 'scale-0 opacity-0'
-                        }`}
-                        style={{
-                          transformOrigin: `${position.x}px ${position.y}px`,
-                          filter: isHighlighted
-                            ? 'drop-shadow(0 0 8px rgba(48, 35, 188, 0.6))'
-                            : 'none',
-                        }}
+                        fill={revealed ? (isHot ? '#DED308' : 'white') : 'transparent'}
+                        className={`transition-all duration-500 ${revealed ? 'scale-100 opacity-100' : 'scale-0 opacity-0'}`}
+                        style={{ transformOrigin: `${x}px ${y}px` }}
                       />
                     </g>
                   )
@@ -245,39 +209,29 @@ export default function ExhibitionTimeline({ exhibitions }: ExhibitionTimelinePr
             </div>
           </div>
 
-          {/* Right Column - Exhibition Cards */}
-          <div className="lg:col-span-10">
-            <div className="space-y-32">
-              {exhibitions.map((exhibition, index) => {
-                const isCurrentlyVisible = visibleSections.includes(exhibition.id)
-                const hasBeenVisible = permanentlyVisible.includes(exhibition.id) // Check if it has ever been visible
-
+          {/* Cards */}
+          <div className="col-span-12 sm:col-span-10">
+            <div className="space-y-28 md:space-y-32">
+              {exhibitions.map((ex, i) => {
+                const revealed = eased >= stops[i] + NODE_LEAD
                 return (
                   <div
-                    key={exhibition.id}
+                    key={ex.id}
                     ref={(el) => {
-                      sectionRefs.current[index] = el
+                      sectionRefs.current[i] = el
                     }}
-                    data-id={exhibition.id}
-                    className={`transition-all duration-1000 ease-out ${
-                      hasBeenVisible // Use permanent visibility instead of current visibility
-                        ? 'translate-x-0 translate-y-0 opacity-100'
-                        : 'translate-x-8 translate-y-12 opacity-0'
-                    }`}
+                    data-id={ex.id}
+                    className={`transition-all duration-700 ease-out ${revealed ? 'translate-y-0 opacity-100' : 'translate-y-6 opacity-0'}`}
                   >
                     <div
-                      className={`group overflow-hidden bg-white shadow-xl transition-all duration-500 hover:-translate-y-2 ${
-                        isCurrentlyVisible ? 'ring-2 ring-[#DED308]/20' : '' // Optional: add subtle ring when currently in view
-                      }`}
+                      className={`group overflow-hidden bg-white shadow-xl transition-all duration-500 ${highlight === ex.id ? 'ring-2 ring-[#DED308]/20' : ''}`}
                     >
                       <div className="flex flex-col lg:flex-row">
                         <div className="w-full lg:w-1/3 xl:w-1/4">
                           <div className="relative aspect-[3/4] w-full overflow-hidden bg-gray-100 sm:aspect-[4/5] md:aspect-[3/4]">
                             <Image
-                              src={
-                                exhibition.imagePath || '/static/images/placeholder-exhibition.jpg'
-                              }
-                              alt={exhibition.title}
+                              src={ex.imagePath || '/static/images/placeholder-exhibition.jpg'}
+                              alt={ex.title}
                               fill
                               className="object-contain transition-transform duration-700 group-hover:scale-105"
                               sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
@@ -290,30 +244,28 @@ export default function ExhibitionTimeline({ exhibitions }: ExhibitionTimelinePr
                           <div className="mb-4 flex flex-col lg:flex-row lg:items-start lg:justify-between">
                             <div className="flex-1">
                               <h3 className="mb-2 text-xl font-bold text-gray-900 italic transition-colors duration-300 group-hover:text-[#DED308] sm:text-2xl">
-                                {exhibition.title}
+                                {ex.title}
                               </h3>
-                              {exhibition.venue && (
+                              {ex.venue && (
                                 <p className="mb-1 text-base text-gray-600 sm:text-lg">
-                                  {exhibition.venue}
+                                  {ex.venue}
                                 </p>
                               )}
                             </div>
                             <div className="mt-2 lg:mt-0">
                               <span className="inline-block bg-[#DED308] px-3 py-2 text-sm font-medium text-white transition-colors duration-300 group-hover:bg-[#C4BB07] sm:px-4">
-                                {exhibition.date}
+                                {ex.date}
                               </span>
                             </div>
                           </div>
 
-                          {exhibition.description && (
-                            <p className="mb-6 leading-relaxed text-gray-600">
-                              {exhibition.description}
-                            </p>
+                          {ex.description && (
+                            <p className="mb-6 leading-relaxed text-gray-600">{ex.description}</p>
                           )}
 
-                          {exhibition.link && (
+                          {ex.link && (
                             <Link
-                              href={exhibition.link}
+                              href={ex.link}
                               className="inline-flex items-center border border-transparent bg-[#DED308] px-6 py-3 text-base font-medium text-white transition-all duration-300 hover:scale-105 hover:bg-[#C4BB07] hover:shadow-lg"
                             >
                               View Details
