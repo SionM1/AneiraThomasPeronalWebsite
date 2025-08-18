@@ -13,30 +13,27 @@ interface Exhibition {
   imagePath: string
   link?: string
 }
-interface ExhibitionTimelineProps {
+interface Props {
   exhibitions: Exhibition[]
 }
 
-export default function ExhibitionTimeline({ exhibitions }: ExhibitionTimelineProps) {
-  // refs
+export default function ExhibitionTimeline({ exhibitions }: Props) {
   const timelineRef = useRef<HTMLDivElement>(null)
   const pathRef = useRef<SVGPathElement>(null)
   const sectionRefs = useRef<(HTMLDivElement | null)[]>([])
   sectionRefs.current = sectionRefs.current.slice(0, exhibitions.length)
 
-  // drawing + reveal state
+  // drawing state
   const [pathLen, setPathLen] = useState(1)
-  const [progress, setProgress] = useState(0) // 0..1
-  const [stops, setStops] = useState<number[]>([]) // per-card thresholds (0..1)
+  const [progress, setProgress] = useState(0) // 0..1, top of page → bottom of timeline
+  const [stops, setStops] = useState<number[]>([]) // per-card reveal thresholds 0..1
   const [highlight, setHighlight] = useState<number | null>(null)
 
-  // config (tweak freely)
+  // tune these
   const EASING_POWER = 1.6 // 1 = linear, >1 = starts slower, ends faster
-  const STICKY_TOP = 72 // px; matches your header spacing
-  const NODE_LEAD = 0.0 // reveal a hair early (e.g. -0.02 to lead by 2%)
+  const STICKY_TOP = 72 // px – where the SVG sticks
 
-  // --- build the bezier path (left gutter) ---
-  // spacing is responsive: a bit tighter on small screens
+  // responsive spacing for the bezier path
   const SPACING =
     typeof window === 'undefined'
       ? 300
@@ -49,6 +46,7 @@ export default function ExhibitionTimeline({ exhibitions }: ExhibitionTimelinePr
   const AMPLITUDE = 60
   const CENTER_X = 60
 
+  // build the winding path once
   const d = useMemo(() => {
     let p = `M${CENTER_X},${SPACING * 0.2}`
     exhibitions.forEach((_, i) => {
@@ -69,37 +67,42 @@ export default function ExhibitionTimeline({ exhibitions }: ExhibitionTimelinePr
     [exhibitions.length, SPACING]
   )
 
-  // measure path length once d is known
+  // measure actual path length for perfect stroke animation
   useLayoutEffect(() => {
     if (pathRef.current) setPathLen(pathRef.current.getTotalLength() || 1)
   }, [d])
 
-  // compute scroll → progress + per-card reveal thresholds
+  /**
+   * KEY FIX 1:
+   * Map page scroll (window.scrollY) to [0..1] where:
+   *   0   = page top
+   *   1   = bottom of timeline (absolute Y of bottom)
+   * This guarantees the stroke starts at 0 at the very top of the page.
+   */
   useEffect(() => {
     if (!timelineRef.current) return
 
+    let endY = 1 // absolute Y of the bottom of the timeline
+
     const measure = () => {
       const tRect = timelineRef.current!.getBoundingClientRect()
-      const docTop = window.scrollY + tRect.top
-      const docBottom = docTop + tRect.height
+      const tTopAbs = window.scrollY + tRect.top // absolute top of timeline
+      const tBotAbs = tTopAbs + tRect.height // absolute bottom of timeline
+      endY = Math.max(1, tBotAbs) // avoid divide by zero
 
-      // map each card top → progress stop [0..1]
+      // KEY FIX 2:
+      // For each card, store the absolute Y of its top against endY → threshold 0..1
       const cardStops = sectionRefs.current.map((el) => {
         if (!el) return 1
         const r = el.getBoundingClientRect()
-        const y = window.scrollY + r.top
-        const stop = (y - docTop) / Math.max(1, docBottom - docTop)
-        return Math.min(1, Math.max(0, stop))
+        const yAbs = window.scrollY + r.top
+        const stop = Math.min(1, Math.max(0, yAbs / endY))
+        return stop
       })
       setStops(cardStops)
-      // also snap current progress after measuring
-      updateProgress(docTop, docBottom)
-    }
 
-    const updateProgress = (docTop: number, docBottom: number) => {
-      const s = window.scrollY + STICKY_TOP // start when timeline reaches sticky top
-      const p = (s - docTop) / Math.max(1, docBottom - docTop)
-      setProgress(Math.min(1, Math.max(0, p)))
+      // also update progress immediately
+      setProgress(Math.min(1, Math.max(0, window.scrollY / endY)))
     }
 
     let raf = 0
@@ -107,10 +110,10 @@ export default function ExhibitionTimeline({ exhibitions }: ExhibitionTimelinePr
       raf =
         raf ||
         requestAnimationFrame(() => {
-          const rect = timelineRef.current!.getBoundingClientRect()
-          const docTop = window.scrollY + rect.top
-          const docBottom = docTop + rect.height
-          updateProgress(docTop, docBottom)
+          setProgress((p) => {
+            const y = window.scrollY
+            return Math.min(1, Math.max(0, y / endY))
+          })
           raf = 0
         })
     }
@@ -127,10 +130,10 @@ export default function ExhibitionTimeline({ exhibitions }: ExhibitionTimelinePr
     }
   }, [exhibitions.length])
 
-  // eased progress for the stroke animation
+  // eased stroke
   const eased = useMemo(() => Math.pow(progress, EASING_POWER), [progress])
 
-  // intersection just to pick a “current” highlight (optional)
+  // small observer to pick a live highlight (optional)
   useEffect(() => {
     const io = new IntersectionObserver(
       (entries) =>
@@ -148,15 +151,12 @@ export default function ExhibitionTimeline({ exhibitions }: ExhibitionTimelinePr
     <div ref={timelineRef} className="w-full py-8 pb-28 sm:py-12">
       <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-12 gap-6 lg:gap-8">
-          {/* Left gutter SVG – visible from sm+; sticky so it tracks the scroll */}
+          {/* SVG gutter – visible from sm+; sticky so it tracks the scroll */}
           <div className="col-span-2 hidden sm:block">
             <div className="sticky" style={{ top: STICKY_TOP }}>
               <svg width="120" height={totalSvgH} viewBox={`0 0 120 ${totalSvgH}`}>
-                {/* measuring path (hidden) */}
                 <path ref={pathRef} d={d} fill="none" stroke="none" />
-                {/* trail */}
                 <path d={d} fill="none" stroke="#E5E7EB" strokeWidth="2" className="opacity-30" />
-                {/* active stroke */}
                 <path
                   d={d}
                   fill="none"
@@ -173,13 +173,12 @@ export default function ExhibitionTimeline({ exhibitions }: ExhibitionTimelinePr
                   </linearGradient>
                 </defs>
 
-                {/* nodes */}
+                {/* nodes reveal exactly when scroll passes their card top */}
                 {exhibitions.map((ex, i) => {
                   const y = (i + 1) * SPACING + SPACING * 0.2
                   const x = CENTER_X
-                  const revealed = eased >= stops[i] + NODE_LEAD
-                  const isHot = highlight === ex.id
-
+                  const revealed = eased >= (stops[i] ?? 1)
+                  const hot = highlight === ex.id
                   return (
                     <g key={ex.id}>
                       <circle
@@ -198,7 +197,7 @@ export default function ExhibitionTimeline({ exhibitions }: ExhibitionTimelinePr
                         r="8"
                         stroke="#DED308"
                         strokeWidth="3"
-                        fill={revealed ? (isHot ? '#DED308' : 'white') : 'transparent'}
+                        fill={revealed ? (hot ? '#DED308' : 'white') : 'transparent'}
                         className={`transition-all duration-500 ${revealed ? 'scale-100 opacity-100' : 'scale-0 opacity-0'}`}
                         style={{ transformOrigin: `${x}px ${y}px` }}
                       />
@@ -213,7 +212,7 @@ export default function ExhibitionTimeline({ exhibitions }: ExhibitionTimelinePr
           <div className="col-span-12 sm:col-span-10">
             <div className="space-y-28 md:space-y-32">
               {exhibitions.map((ex, i) => {
-                const revealed = eased >= stops[i] + NODE_LEAD
+                const revealed = eased >= (stops[i] ?? 1)
                 return (
                   <div
                     key={ex.id}
@@ -239,7 +238,6 @@ export default function ExhibitionTimeline({ exhibitions }: ExhibitionTimelinePr
                             <div className="absolute inset-0 bg-gradient-to-t from-black/10 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
                           </div>
                         </div>
-
                         <div className="flex-1 p-4 sm:p-6 lg:p-8">
                           <div className="mb-4 flex flex-col lg:flex-row lg:items-start lg:justify-between">
                             <div className="flex-1">
