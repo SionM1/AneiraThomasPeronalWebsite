@@ -124,37 +124,43 @@ const exhibitions = [
 
 export default function ExhibitionsPage() {
   return (
-    <div className="relative left-1/2 min-h-screen w-screen -translate-x-1/2 transform">
-      <div className="w-full bg-white py-16 sm:py-24" style={{ width: '100vw' }}>
-        {/* Aneira Thomas Header - Top Left Position (scrolls naturally) */}
-        <div className="absolute top-4 left-4 z-[60] sm:top-6 sm:left-8">
-          <h1
-            className={`${coveredByYourGrace.className} text-3xl sm:text-4xl md:text-5xl`}
-            style={{ color: '#DED308' }}
-          >
-            Aneira Thomas
-          </h1>
-        </div>
-
-        {/* Section Title - Left Aligned with Divider */}
-        <div className="w-full px-4 pt-32 sm:px-8 md:px-16 lg:px-24 xl:px-32 2xl:px-48">
-          <div className="mb-12 w-full">
-            <h2
-              className="mb-6 text-3xl sm:text-4xl md:text-5xl lg:text-6xl"
-              style={{ color: '#DED308', fontFamily: 'Menlo', fontWeight: 'bold' }}
+    <>
+      {/* Exhibitions Section - Break Out of SectionContainer */}
+      <div className="absolute left-1/2 w-screen -translate-x-1/2 transform">
+        <div className="w-full bg-white py-16 sm:py-24" style={{ width: '100vw' }}>
+          {/* Aneira Thomas Header - Top Left Position (scrolls naturally) */}
+          <div className="absolute top-4 left-4 z-[60] sm:top-6 sm:left-8">
+            <h1
+              className={`${coveredByYourGrace.className} text-3xl sm:text-4xl md:text-5xl`}
+              style={{ color: '#DED308' }}
             >
-              Exhibitions and Awards
-            </h2>
+              Aneira Thomas
+            </h1>
           </div>
-          {/* Divider Line */}
-          <div className="mb-16 w-full border-b border-gray-200"></div>
-        </div>
 
-        {/* Timeline Content */}
-        <div className="w-full">
-          <ExhibitionTimeline exhibitions={exhibitions} />
+          {/* Section Title - Left Aligned with Divider */}
+          <div className="w-full px-4 pt-32 sm:px-8 md:px-16 lg:px-24 xl:px-32 2xl:px-48">
+            <div className="mb-12 w-full">
+              <h2
+                className="mb-6 text-3xl sm:text-4xl md:text-5xl lg:text-6xl"
+                style={{ color: '#DED308', fontFamily: 'Menlo', fontWeight: 'bold' }}
+              >
+                Exhibitions and Awards
+              </h2>
+            </div>
+            {/* Divider Line */}
+            <div className="mb-16 w-full border-b border-gray-200"></div>
+          </div>
+
+          {/* Timeline Content */}
+          <div className="w-full">
+            <ExhibitionTimeline exhibitions={exhibitions} />
+          </div>
         </div>
       </div>
-    </div>
+
+      {/* Spacer to maintain layout flow and footer positioning */}
+      <div style={{ height: `${exhibitions.length * 350 + 800}px` }}></div>
+    </>
   )
 }
