@@ -65,7 +65,7 @@ export default function ExhibitionTimeline({ exhibitions }: ExhibitionTimelinePr
       },
       {
         threshold: 0.1,
-        rootMargin: '0% 0px -20% 0px',
+        rootMargin: '-10% 0px -40% 0px',
       }
     )
 
@@ -162,7 +162,7 @@ export default function ExhibitionTimeline({ exhibitions }: ExhibitionTimelinePr
   const totalSVGHeight = (exhibitions.length + 1) * 300 + 100
 
   return (
-    <div className="w-full py-8 pb-64 sm:py-12" ref={timelineRef}>
+    <div className="w-full py-8 pb-32 sm:py-12" ref={timelineRef}>
       <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="lg:grid lg:grid-cols-12 lg:gap-8">
           {/* Left Column - Dynamic Winding Line */}
@@ -265,7 +265,7 @@ export default function ExhibitionTimeline({ exhibitions }: ExhibitionTimelinePr
 
           {/* Right Column - Exhibition Cards */}
           <div className="lg:col-span-10">
-            <div className="space-y-24 sm:space-y-32">
+            <div className="space-y-32">
               {exhibitions.map((exhibition, index) => {
                 const isCurrentlyVisible = visibleSections.includes(exhibition.id)
                 const hasBeenVisible = permanentlyVisible.includes(exhibition.id) // Check if it has ever been visible
