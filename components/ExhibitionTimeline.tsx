@@ -17,6 +17,12 @@ interface Props {
   exhibitions: Exhibition[]
 }
 
+/** --- Tunables (one place only) --- */
+const STICKY_TOP = 72 // where the SVG sticks
+const HEAD_ANCHOR = STICKY_TOP + 110 // viewport Y where the line head “sits”
+const REVEAL_NODE_OFFSET = 24 // reveal just before the node center
+const EASING_POWER = 1.25 // 1 = linear; >1 slower start, faster end
+
 export default function ExhibitionTimeline({ exhibitions }: Props) {
   const timelineRef = useRef<HTMLDivElement>(null)
   const pathRef = useRef<SVGPathElement>(null)
@@ -25,17 +31,11 @@ export default function ExhibitionTimeline({ exhibitions }: Props) {
 
   const [pathLen, setPathLen] = useState(1)
   const [progress, setProgress] = useState(0) // 0..1 head along path
-  const [nodeStopsPx, setNodeStopsPx] = useState<number[]>([]) // card tops in PX inside timeline
+  const [nodeStopsPx, setNodeStopsPx] = useState<number[]>([]) // node Y positions inside the timeline
   const [permaReveal, setPermaReveal] = useState<Set<number>>(new Set())
   const [highlight, setHighlight] = useState<number | null>(null)
 
-  // Visual tuning
-  const STICKY_TOP = 72 // where the SVG sticks
-  const HEAD_ANCHOR = STICKY_TOP + 120 // viewport Y where you want the head to “sit”
-  const REVEAL_OFFSET = 40 // reveal just before the card hits the anchor
-  const EASING_POWER = 1.3 // 1 = linear; >1 = slower start, faster end
-
-  // Responsive spacing for the bezier path
+  /** Responsive geometry (same values used for path + nodes) */
   const SPACING =
     typeof window === 'undefined'
       ? 300
@@ -47,12 +47,16 @@ export default function ExhibitionTimeline({ exhibitions }: Props) {
 
   const AMPLITUDE = 60
   const CENTER_X = 60
+  const NODE_START = SPACING * 0.2 // initial M … Y
 
-  // Build the winding path
+  /** Where each node sits vertically INSIDE the timeline (px) */
+  const nodeY = (i: number) => NODE_START + (i + 1) * SPACING
+
+  /** Build the winding path */
   const d = useMemo(() => {
-    let p = `M${CENTER_X},${SPACING * 0.2}`
+    let p = `M${CENTER_X},${NODE_START}`
     exhibitions.forEach((_, i) => {
-      const y = (i + 1) * SPACING + SPACING * 0.2
+      const y = nodeY(i)
       const even = i % 2 === 0
       const c1x = CENTER_X + (even ? AMPLITUDE : -AMPLITUDE)
       const c1y = y - SPACING * 0.7
@@ -65,45 +69,40 @@ export default function ExhibitionTimeline({ exhibitions }: Props) {
   }, [exhibitions.length, SPACING])
 
   const totalSvgH = useMemo(
-    () => (exhibitions.length + 1) * SPACING + 120,
+    () => NODE_START + (exhibitions.length + 1) * SPACING,
     [exhibitions.length, SPACING]
   )
 
-  // Measure path length for perfect dash animation
+  /** Measure exact path length for perfect dash animation */
   useLayoutEffect(() => {
     if (pathRef.current) setPathLen(pathRef.current.getTotalLength() || 1)
   }, [d])
 
   /**
-   * PROGRESS MODEL (fixes “too fast in middle”):
-   * Head position = (window.scrollY + HEAD_ANCHOR) - timelineTopAbs
-   * Progress = head / timelineHeight (clamped 0..1)
-   * This keeps the drawing head near the sticky area while scrolling.
+   * PROGRESS MODEL:
+   * Head position = (scrollY + HEAD_ANCHOR) - timelineTopAbs
+   * Progress      = clamp( head / timelineHeight, 0..1 )
+   * Nodes/cards reveal when head reaches each nodeY(i).
    */
   useEffect(() => {
     if (!timelineRef.current) return
 
-    let tTopAbs = 0 // absolute top of timeline
-    let tHeight = 1 // timeline height
-    let stopsPx: number[] = [] // card tops in pixels inside the timeline
+    let tTopAbs = 0
+    let tHeight = 1
+    let stops: number[] = []
 
     const measure = () => {
       const tRect = timelineRef.current!.getBoundingClientRect()
       tTopAbs = window.scrollY + tRect.top
       tHeight = Math.max(1, tRect.height)
 
-      // Capture each card's top position inside the timeline (in PX)
-      stopsPx = sectionRefs.current.map((el) => {
-        if (!el) return tHeight
-        const r = el.getBoundingClientRect()
-        const cardTopAbs = window.scrollY + r.top
-        return Math.max(0, cardTopAbs - tTopAbs)
-      })
-      setNodeStopsPx(stopsPx)
+      // Node thresholds based on the geometry of the path (not card positions)
+      stops = exhibitions.map((_, i) => nodeY(i))
+      setNodeStopsPx(stops)
 
-      // Set an initial progress
-      const head = window.scrollY + HEAD_ANCHOR - tTopAbs
-      setProgress(Math.min(1, Math.max(0, head / tHeight)))
+      // initial progress (0 until the timeline reaches the anchor)
+      const headInTimeline = window.scrollY + HEAD_ANCHOR - tTopAbs
+      setProgress(headInTimeline > 0 ? Math.min(1, headInTimeline / tHeight) : 0)
     }
 
     let raf = 0
@@ -111,14 +110,21 @@ export default function ExhibitionTimeline({ exhibitions }: Props) {
       raf =
         raf ||
         requestAnimationFrame(() => {
-          const head = window.scrollY + HEAD_ANCHOR - tTopAbs
-          const p = Math.min(1, Math.max(0, head / tHeight))
+          const headInTimeline = window.scrollY + HEAD_ANCHOR - tTopAbs
+
+          if (headInTimeline <= 0) {
+            setProgress(0) // draw nothing until we actually reach the timeline
+            raf = 0
+            return
+          }
+
+          const p = Math.min(1, Math.max(0, headInTimeline / tHeight))
           setProgress(p)
 
-          // Permanent reveal when head passes node
+          // One-time reveal when head passes each node
           const next = new Set(permaReveal)
-          stopsPx.forEach((stop, i) => {
-            if (head >= stop - REVEAL_OFFSET) next.add(i)
+          stops.forEach((stop, i) => {
+            if (headInTimeline >= stop - REVEAL_NODE_OFFSET) next.add(i)
           })
           if (next.size !== permaReveal.size) setPermaReveal(next)
 
@@ -137,19 +143,20 @@ export default function ExhibitionTimeline({ exhibitions }: Props) {
       if (raf) cancelAnimationFrame(raf)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [exhibitions.length, HEAD_ANCHOR, REVEAL_OFFSET])
+  }, [exhibitions.length, SPACING])
 
-  // gentle easing
+  /** Gentle easing for the stroke head */
   const eased = Math.pow(progress, EASING_POWER)
 
-  // Live highlight (optional)
+  /** Optional: live highlight of the card closest to mid-viewport */
   useEffect(() => {
     const io = new IntersectionObserver(
-      (entries) =>
+      (entries) => {
         entries.forEach((e) => {
           const id = Number(e.target.getAttribute('data-id') || 0)
           if (e.isIntersecting) setHighlight(id)
-        }),
+        })
+      },
       { rootMargin: `-${STICKY_TOP}px 0px -50% 0px`, threshold: 0.01 }
     )
     sectionRefs.current.forEach((el) => el && io.observe(el))
@@ -164,8 +171,11 @@ export default function ExhibitionTimeline({ exhibitions }: Props) {
           <div className="col-span-2 hidden sm:block">
             <div className="sticky" style={{ top: STICKY_TOP }}>
               <svg width="120" height={totalSvgH} viewBox={`0 0 120 ${totalSvgH}`}>
+                {/* Invisible reference for length */}
                 <path ref={pathRef} d={d} fill="none" stroke="none" />
+                {/* Background */}
                 <path d={d} fill="none" stroke="#E5E7EB" strokeWidth="2" className="opacity-30" />
+                {/* Animated head */}
                 <path
                   d={d}
                   fill="none"
@@ -182,10 +192,10 @@ export default function ExhibitionTimeline({ exhibitions }: Props) {
                   </linearGradient>
                 </defs>
 
-                {/* Nodes: reveal in lockstep with images (head vs nodeStopsPx) */}
+                {/* Nodes (reveal in lockstep with cards) */}
                 {exhibitions.map((ex, i) => {
-                  const y = (i + 1) * SPACING + SPACING * 0.2
                   const x = CENTER_X
+                  const y = nodeY(i)
                   const revealed = permaReveal.has(i)
                   const hot = highlight === ex.id
                   return (
@@ -197,7 +207,9 @@ export default function ExhibitionTimeline({ exhibitions }: Props) {
                         fill="none"
                         stroke="#DED308"
                         strokeWidth="2"
-                        className={`transition-all duration-500 ${revealed ? 'scale-100 opacity-60' : 'scale-0 opacity-0'}`}
+                        className={`transition-all duration-500 ${
+                          revealed ? 'scale-100 opacity-60' : 'scale-0 opacity-0'
+                        }`}
                         style={{ transformOrigin: `${x}px ${y}px` }}
                       />
                       <circle
@@ -207,7 +219,9 @@ export default function ExhibitionTimeline({ exhibitions }: Props) {
                         stroke="#DED308"
                         strokeWidth="3"
                         fill={revealed ? (hot ? '#DED308' : 'white') : 'transparent'}
-                        className={`transition-all duration-500 ${revealed ? 'scale-100 opacity-100' : 'scale-0 opacity-0'}`}
+                        className={`transition-all duration-500 ${
+                          revealed ? 'scale-100 opacity-100' : 'scale-0 opacity-0'
+                        }`}
                         style={{ transformOrigin: `${x}px ${y}px` }}
                       />
                     </g>
@@ -229,10 +243,14 @@ export default function ExhibitionTimeline({ exhibitions }: Props) {
                       sectionRefs.current[i] = el
                     }}
                     data-id={ex.id}
-                    className={`transition-all duration-700 ease-out ${revealed ? 'translate-y-0 opacity-100' : 'translate-y-6 opacity-0'}`}
+                    className={`transition-all duration-700 ease-out ${
+                      revealed ? 'translate-y-0 opacity-100' : 'translate-y-6 opacity-0'
+                    }`}
                   >
                     <div
-                      className={`group overflow-hidden bg-white shadow-xl transition-all duration-500 ${highlight === ex.id ? 'ring-2 ring-[#DED308]/20' : ''}`}
+                      className={`group overflow-hidden bg-white shadow-xl transition-all duration-500 ${
+                        highlight === ex.id ? 'ring-2 ring-[#DED308]/20' : ''
+                      }`}
                     >
                       <div className="flex flex-col lg:flex-row">
                         <div className="w-full lg:w-1/3 xl:w-1/4">
