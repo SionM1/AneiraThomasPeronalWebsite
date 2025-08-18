@@ -23,17 +23,19 @@ export default function ExhibitionTimeline({ exhibitions }: Props) {
   const sectionRefs = useRef<(HTMLDivElement | null)[]>([])
   sectionRefs.current = sectionRefs.current.slice(0, exhibitions.length)
 
-  // drawing state
   const [pathLen, setPathLen] = useState(1)
-  const [progress, setProgress] = useState(0) // 0..1, top of page → bottom of timeline
-  const [stops, setStops] = useState<number[]>([]) // per-card reveal thresholds 0..1
+  const [progress, setProgress] = useState(0) // 0..1 head along path
+  const [nodeStopsPx, setNodeStopsPx] = useState<number[]>([]) // card tops in PX inside timeline
+  const [permaReveal, setPermaReveal] = useState<Set<number>>(new Set())
   const [highlight, setHighlight] = useState<number | null>(null)
 
-  // tune these
-  const EASING_POWER = 1.6 // 1 = linear, >1 = starts slower, ends faster
-  const STICKY_TOP = 72 // px – where the SVG sticks
+  // Visual tuning
+  const STICKY_TOP = 72 // where the SVG sticks
+  const HEAD_ANCHOR = STICKY_TOP + 120 // viewport Y where you want the head to “sit”
+  const REVEAL_OFFSET = 40 // reveal just before the card hits the anchor
+  const EASING_POWER = 1.3 // 1 = linear; >1 = slower start, faster end
 
-  // responsive spacing for the bezier path
+  // Responsive spacing for the bezier path
   const SPACING =
     typeof window === 'undefined'
       ? 300
@@ -46,7 +48,7 @@ export default function ExhibitionTimeline({ exhibitions }: Props) {
   const AMPLITUDE = 60
   const CENTER_X = 60
 
-  // build the winding path once
+  // Build the winding path
   const d = useMemo(() => {
     let p = `M${CENTER_X},${SPACING * 0.2}`
     exhibitions.forEach((_, i) => {
@@ -67,42 +69,41 @@ export default function ExhibitionTimeline({ exhibitions }: Props) {
     [exhibitions.length, SPACING]
   )
 
-  // measure actual path length for perfect stroke animation
+  // Measure path length for perfect dash animation
   useLayoutEffect(() => {
     if (pathRef.current) setPathLen(pathRef.current.getTotalLength() || 1)
   }, [d])
 
   /**
-   * KEY FIX 1:
-   * Map page scroll (window.scrollY) to [0..1] where:
-   *   0   = page top
-   *   1   = bottom of timeline (absolute Y of bottom)
-   * This guarantees the stroke starts at 0 at the very top of the page.
+   * PROGRESS MODEL (fixes “too fast in middle”):
+   * Head position = (window.scrollY + HEAD_ANCHOR) - timelineTopAbs
+   * Progress = head / timelineHeight (clamped 0..1)
+   * This keeps the drawing head near the sticky area while scrolling.
    */
   useEffect(() => {
     if (!timelineRef.current) return
 
-    let endY = 1 // absolute Y of the bottom of the timeline
+    let tTopAbs = 0 // absolute top of timeline
+    let tHeight = 1 // timeline height
+    let stopsPx: number[] = [] // card tops in pixels inside the timeline
 
     const measure = () => {
       const tRect = timelineRef.current!.getBoundingClientRect()
-      const tTopAbs = window.scrollY + tRect.top // absolute top of timeline
-      const tBotAbs = tTopAbs + tRect.height // absolute bottom of timeline
-      endY = Math.max(1, tBotAbs) // avoid divide by zero
+      tTopAbs = window.scrollY + tRect.top
+      tHeight = Math.max(1, tRect.height)
 
-      // KEY FIX 2:
-      // For each card, store the absolute Y of its top against endY → threshold 0..1
-      const cardStops = sectionRefs.current.map((el) => {
-        if (!el) return 1
+      // Capture each card's top position inside the timeline (in PX)
+      stopsPx = sectionRefs.current.map((el) => {
+        if (!el) return tHeight
         const r = el.getBoundingClientRect()
-        const yAbs = window.scrollY + r.top
-        const stop = Math.min(1, Math.max(0, yAbs / endY))
-        return stop
+        const cardTopAbs = window.scrollY + r.top
+        return Math.max(0, cardTopAbs - tTopAbs)
       })
-      setStops(cardStops)
+      setNodeStopsPx(stopsPx)
 
-      // also update progress immediately
-      setProgress(Math.min(1, Math.max(0, window.scrollY / endY)))
+      // Set an initial progress
+      const head = window.scrollY + HEAD_ANCHOR - tTopAbs
+      setProgress(Math.min(1, Math.max(0, head / tHeight)))
     }
 
     let raf = 0
@@ -110,10 +111,17 @@ export default function ExhibitionTimeline({ exhibitions }: Props) {
       raf =
         raf ||
         requestAnimationFrame(() => {
-          setProgress((p) => {
-            const y = window.scrollY
-            return Math.min(1, Math.max(0, y / endY))
+          const head = window.scrollY + HEAD_ANCHOR - tTopAbs
+          const p = Math.min(1, Math.max(0, head / tHeight))
+          setProgress(p)
+
+          // Permanent reveal when head passes node
+          const next = new Set(permaReveal)
+          stopsPx.forEach((stop, i) => {
+            if (head >= stop - REVEAL_OFFSET) next.add(i)
           })
+          if (next.size !== permaReveal.size) setPermaReveal(next)
+
           raf = 0
         })
     }
@@ -128,12 +136,13 @@ export default function ExhibitionTimeline({ exhibitions }: Props) {
       window.removeEventListener('resize', onResize)
       if (raf) cancelAnimationFrame(raf)
     }
-  }, [exhibitions.length])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [exhibitions.length, HEAD_ANCHOR, REVEAL_OFFSET])
 
-  // eased stroke
-  const eased = useMemo(() => Math.pow(progress, EASING_POWER), [progress])
+  // gentle easing
+  const eased = Math.pow(progress, EASING_POWER)
 
-  // small observer to pick a live highlight (optional)
+  // Live highlight (optional)
   useEffect(() => {
     const io = new IntersectionObserver(
       (entries) =>
@@ -151,7 +160,7 @@ export default function ExhibitionTimeline({ exhibitions }: Props) {
     <div ref={timelineRef} className="w-full py-8 pb-28 sm:py-12">
       <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-12 gap-6 lg:gap-8">
-          {/* SVG gutter – visible from sm+; sticky so it tracks the scroll */}
+          {/* Sticky SVG gutter */}
           <div className="col-span-2 hidden sm:block">
             <div className="sticky" style={{ top: STICKY_TOP }}>
               <svg width="120" height={totalSvgH} viewBox={`0 0 120 ${totalSvgH}`}>
@@ -173,11 +182,11 @@ export default function ExhibitionTimeline({ exhibitions }: Props) {
                   </linearGradient>
                 </defs>
 
-                {/* nodes reveal exactly when scroll passes their card top */}
+                {/* Nodes: reveal in lockstep with images (head vs nodeStopsPx) */}
                 {exhibitions.map((ex, i) => {
                   const y = (i + 1) * SPACING + SPACING * 0.2
                   const x = CENTER_X
-                  const revealed = eased >= (stops[i] ?? 1)
+                  const revealed = permaReveal.has(i)
                   const hot = highlight === ex.id
                   return (
                     <g key={ex.id}>
@@ -212,7 +221,7 @@ export default function ExhibitionTimeline({ exhibitions }: Props) {
           <div className="col-span-12 sm:col-span-10">
             <div className="space-y-28 md:space-y-32">
               {exhibitions.map((ex, i) => {
-                const revealed = eased >= (stops[i] ?? 1)
+                const revealed = permaReveal.has(i) // stays true once revealed
                 return (
                   <div
                     key={ex.id}
@@ -238,6 +247,7 @@ export default function ExhibitionTimeline({ exhibitions }: Props) {
                             <div className="absolute inset-0 bg-gradient-to-t from-black/10 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
                           </div>
                         </div>
+
                         <div className="flex-1 p-4 sm:p-6 lg:p-8">
                           <div className="mb-4 flex flex-col lg:flex-row lg:items-start lg:justify-between">
                             <div className="flex-1">
