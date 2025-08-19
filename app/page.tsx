@@ -42,20 +42,35 @@ export default function Page() {
   const [currentSlide, setCurrentSlide] = useState(0)
   const [isSliderVisible, setIsSliderVisible] = useState(false)
   const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const [randomizedImages, setRandomizedImages] = useState(sliderImages)
+  const [scrollY, setScrollY] = useState(0)
 
-  // Scroll to top on page load
+  // Randomize images on page load
   useEffect(() => {
+    const shuffled = [...sliderImages].sort(() => Math.random() - 0.5)
+    setRandomizedImages(shuffled)
+    setCurrentSlide(0)
     window.scrollTo(0, 0)
+  }, [])
+
+  // Parallax scroll effect
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrollY(window.scrollY)
+    }
+
+    window.addEventListener('scroll', handleScroll)
+    return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
   // Auto-advance slider
   useEffect(() => {
     const timer = setInterval(() => {
-      setCurrentSlide((prev) => (prev + 1) % sliderImages.length)
+      setCurrentSlide((prev) => (prev + 1) % randomizedImages.length)
     }, 5000)
 
     return () => clearInterval(timer)
-  }, [])
+  }, [randomizedImages.length])
 
   // Trigger header animation on scroll or click
   useEffect(() => {
@@ -79,11 +94,11 @@ export default function Page() {
   }, [])
 
   const nextSlide = () => {
-    setCurrentSlide((prev) => (prev + 1) % sliderImages.length)
+    setCurrentSlide((prev) => (prev + 1) % randomizedImages.length)
   }
 
   const prevSlide = () => {
-    setCurrentSlide((prev) => (prev - 1 + sliderImages.length) % sliderImages.length)
+    setCurrentSlide((prev) => (prev - 1 + randomizedImages.length) % randomizedImages.length)
   }
 
   return (
@@ -95,12 +110,15 @@ export default function Page() {
           <div className="relative min-h-screen w-full">
             {/* Full viewport width slider */}
             <div className="relative min-h-screen overflow-hidden" style={{ width: '100vw' }}>
-              {sliderImages.map((image, index) => (
+              {randomizedImages.map((image, index) => (
                 <div
-                  key={index}
+                  key={`${image}-${index}`}
                   className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${
                     index === currentSlide ? 'opacity-100' : 'opacity-0'
                   }`}
+                  style={{
+                    transform: `translateY(${scrollY * 0.5}px)`,
+                  }}
                 >
                   <Image
                     src={image}

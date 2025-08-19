@@ -17,6 +17,16 @@ export const metadata: Metadata = genPageMetadata({
 export default function ContactPage() {
   return (
     <div className="w-full">
+      {/* Aneira Thomas Header - Top Left Position */}
+      <div className="absolute top-4 left-4 z-[60] sm:top-6 sm:left-8">
+        <h1
+          className={`${coveredByYourGrace.className} text-3xl sm:text-4xl md:text-5xl`}
+          style={{ color: '#DED308' }}
+        >
+          Aneira Thomas
+        </h1>
+      </div>
+
       {/* Hero Section */}
       <div className="py-16 sm:py-20 md:py-24">
         <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16">

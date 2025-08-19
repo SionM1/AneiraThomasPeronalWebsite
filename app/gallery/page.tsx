@@ -71,7 +71,7 @@ export default function GalleryPage() {
           </div>
 
           {/* Gallery Grid */}
-          <div className="grid max-w-none grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          <div className="grid max-w-none grid-cols-1 gap-16 md:grid-cols-2 lg:grid-cols-3">
             {artworks.map((artwork, index) => (
               <div
                 key={artwork.slug}

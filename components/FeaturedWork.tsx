@@ -99,32 +99,26 @@ export default function FeaturedWork({ className = '' }: FeaturedWorkProps) {
                 }}
               >
                 {/* Artwork Container */}
-                <div className="relative h-[28rem] w-full overflow-hidden bg-transparent transition-all duration-500 group-hover:scale-105">
-                  {/* Image container with higher z-index */}
-                  <div className="absolute relative inset-6 z-40 overflow-hidden border-2 border-gray-200 bg-transparent transition-colors duration-300 group-hover:border-gray-300">
+                <div className="relative w-full overflow-hidden bg-transparent transition-all duration-500 group-hover:scale-105">
+                  {/* Dynamic aspect ratio based on screen size */}
+                  <div className="relative aspect-[4/3] w-full overflow-hidden border-2 border-gray-200 bg-white shadow-lg transition-colors duration-300 group-hover:border-gray-300 md:aspect-[3/4] lg:aspect-square">
                     <Image
                       src={artwork.imagePath}
                       alt={artwork.title}
                       fill
-                      className="object-contain"
-                      style={{
-                        position: 'relative',
-                        zIndex: 50,
-                        display: 'block',
-                      }}
+                      className="object-cover transition-transform duration-500 group-hover:scale-105"
+                      sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
                     />
                   </div>
 
-                  {/* Hover overlay - hidden for third image (index 2) */}
-                  {index !== 2 && (
-                    <div className="bg-opacity-0 group-hover:bg-opacity-20 absolute relative inset-0 z-45 flex items-center justify-center bg-black transition-all duration-500">
-                      <div className="translate-y-4 transform opacity-0 transition-all duration-500 group-hover:translate-y-0 group-hover:opacity-100">
-                        <div className="bg-opacity-95 bg-white px-6 py-3 shadow-lg">
-                          <span className="text-base font-semibold text-black">View Artwork</span>
-                        </div>
-                      </div>
+                  {/* Hover overlay */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+                    <div className="absolute inset-x-0 bottom-0 p-4 text-white">
+                      <h3 className="mb-1 text-lg font-semibold italic">{artwork.title}</h3>
+                      <p className="mb-1 text-sm opacity-90">{artwork.medium}</p>
+                      {artwork.year && <p className="text-sm opacity-75">{artwork.year}</p>}
                     </div>
-                  )}
+                  </div>
                 </div>
 
                 {/* Artwork Info */}

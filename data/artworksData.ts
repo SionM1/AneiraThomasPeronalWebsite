@@ -168,7 +168,7 @@ export const artworksData: Artwork[] = [
   },
   {
     slug: 'cynffon-y-tan',
-    title: 'Cynffon y tȃn',
+    title: 'Cynffon y tân',
     medium: 'Distemper and oil paint on canvas',
     size: '45x75cm',
     description: 'Welsh-titled work exploring fiery tail-like forms.',
