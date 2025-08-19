@@ -52,7 +52,7 @@ export default function GalleryPage() {
       </div>
 
       {/* Main content */}
-      <div className="px-8 pt-32">
+      <div className="px-4 pt-32 sm:px-6 lg:px-8">
         <div
           ref={sectionRef}
           className={`transition-all duration-1000 ease-out ${
@@ -71,7 +71,7 @@ export default function GalleryPage() {
           </div>
 
           {/* Gallery Grid */}
-          <div className="grid max-w-none grid-cols-1 gap-16 md:grid-cols-2 lg:grid-cols-3">
+          <div className="grid max-w-none grid-cols-2 gap-6 md:gap-12 lg:grid-cols-3 lg:gap-16">
             {artworks.map((artwork, index) => (
               <div
                 key={artwork.slug}
@@ -99,14 +99,18 @@ export default function GalleryPage() {
                       alt={artwork.title}
                       fill
                       className="object-cover"
-                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, (max-width: 1280px) 33vw, 25vw"
+                      sizes="(max-width: 768px) 50vw, (max-width: 1024px) 50vw, (max-width: 1280px) 33vw, 25vw"
                       priority={index < 6}
                     />
                     <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100">
-                      <div className="absolute right-0 bottom-0 left-0 p-4 text-white">
-                        <h3 className="mb-1 text-lg font-semibold italic">{artwork.title}</h3>
-                        <p className="mb-1 text-sm opacity-90">{artwork.medium}</p>
-                        {artwork.year && <p className="mb-2 text-sm opacity-75">{artwork.year}</p>}
+                      <div className="absolute right-0 bottom-0 left-0 p-3 text-white sm:p-4">
+                        <h3 className="mb-1 text-base font-semibold italic sm:text-lg">
+                          {artwork.title}
+                        </h3>
+                        <p className="mb-1 text-xs opacity-90 sm:text-sm">{artwork.medium}</p>
+                        {artwork.year && (
+                          <p className="mb-2 text-xs opacity-75 sm:text-sm">{artwork.year}</p>
+                        )}
                         {artwork.available !== undefined && (
                           <span
                             className={`inline-block px-3 py-1 text-xs font-medium ${
