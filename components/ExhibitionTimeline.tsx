@@ -18,10 +18,10 @@ interface Props {
 }
 
 /** --- Tunables (one place only) --- */
-const STICKY_TOP = 72 // where the SVG sticks
+const STICKY_TOP = 20 // where the SVG sticks
 const HEAD_ANCHOR = STICKY_TOP + 110 // viewport Y where the line head “sits”
-const REVEAL_NODE_OFFSET = 24 // reveal just before the node center
-const EASING_POWER = 1.25 // 1 = linear; >1 slower start, faster end
+const REVEAL_NODE_OFFSET = 10 // reveal just before the node center
+const EASING_POWER = 0.5 // 1 = linear; >1 slower start, faster end
 
 export default function ExhibitionTimeline({ exhibitions }: Props) {
   const timelineRef = useRef<HTMLDivElement>(null)
