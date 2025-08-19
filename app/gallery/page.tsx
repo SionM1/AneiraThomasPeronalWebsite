@@ -123,11 +123,26 @@ export default function GalleryPage() {
                           priority={index < 6}
                         />
 
-                        {/* Hover overlay, transparent by default */}
-                        <div className="pointer-events-none absolute inset-0 flex items-center justify-center bg-transparent transition-colors duration-500 group-hover:bg-black/20">
-                          <span className="translate-y-2 bg-white/95 px-4 py-2 text-xs font-semibold text-black opacity-0 shadow-lg transition-all duration-500 group-hover:translate-y-0 group-hover:opacity-100 sm:px-6 sm:py-3 sm:text-sm">
-                            View Artwork
-                          </span>
+                        {/* Hover overlay with artwork details */}
+                        <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+                          <div className="absolute right-0 bottom-0 left-0 p-4 text-white">
+                            <h3 className="mb-1 text-lg font-semibold italic">{artwork.title}</h3>
+                            <p className="mb-1 text-sm opacity-90">{artwork.medium}</p>
+                            {artwork.year && (
+                              <p className="mb-2 text-sm opacity-75">{artwork.year}</p>
+                            )}
+                            {artwork.available !== undefined && (
+                              <span
+                                className={`inline-block px-3 py-1 text-xs font-medium ${
+                                  artwork.available
+                                    ? 'bg-green-500/90 text-white'
+                                    : 'bg-red-500/90 text-white'
+                                }`}
+                              >
+                                {artwork.available ? 'Available' : 'Sold'}
+                              </span>
+                            )}
+                          </div>
                         </div>
                       </div>
                     </div>
