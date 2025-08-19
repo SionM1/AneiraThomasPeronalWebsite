@@ -108,7 +108,7 @@ export default async function ArtworkPage({ params }: ArtworkPageProps) {
             <div className="flex flex-col justify-start space-y-8">
               <div>
                 <h1
-                  className="mb-4 text-4xl"
+                  className="mb-4 text-4xl italic"
                   style={{ color: '#DED308', fontFamily: 'Menlo', fontWeight: 'bold' }}
                 >
                   {artwork.title}

@@ -76,7 +76,7 @@ export default function GalleryGrid({ artworks }: GalleryGridProps) {
                   />
                   <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100">
                     <div className="absolute right-0 bottom-0 left-0 p-4 text-white">
-                      <h3 className="mb-1 text-lg font-semibold">{artwork.title}</h3>
+                      <h3 className="mb-1 text-lg font-semibold italic">{artwork.title}</h3>
                       <p className="mb-1 text-sm opacity-90">{artwork.medium}</p>
                       {artwork.year && <p className="mb-2 text-sm opacity-75">{artwork.year}</p>}
                       {artwork.available !== undefined && (

@@ -25,25 +25,23 @@ export default function AboutSections({ coveredByYourGrace }: AboutSectionsProps
   const sections: SectionData[] = [
     {
       id: 1,
-      title: "Aneira's Background",
+      title: "Aneira's Artist Statment",
       content:
-        'Aneira grew up in [location] surrounded by [details]. Her early experiences with art began when [background story]. This connection to her roots deeply influences her artistic expression, creating a unique perspective that can be seen throughout her work. The cultural elements from her upbringing are often subtly woven into her pieces, creating a rich tapestry of personal history and artistic vision.',
+        'Aneira Thomas’s practice explores her deep connection with nature and produces surfaces full of movement, patterns and layers. Whilst reminiscing her memories, she pulls visual prompts from organic details of nature as a symbol of time passing. Through bright colourful surfaces, Thomas longs to feel connected to nature and explores this relationship through mark making. Her practice includes many slower paced methods such as extracting natural pigments, making canvas stretcher bars and using traditional painting techniques. These methods encourage her audience to slow their pace, reflect on their memories and regain a bond with the natural world. Thomas approaches her work using a variety of mediums, which allows her to work with several layers that weave into one harmonious surface.',
       imagePath: '/static/images/AneiraWorking1.jpeg',
       imageAlt: 'Aneira in her early years',
     },
     {
       id: 2,
       title: 'Connection to Nature',
-      content:
-        "Nature plays a central role in Aneira's artistic practice. She finds inspiration in [specific natural elements] and translates these organic forms into her work through [techniques/approaches]. Her process involves [details about practice], allowing the natural world to guide her creative decisions. This deep connection to the environment is evident in her use of color, texture, and composition.",
+      content: '',
       imagePath: '/static/images/AneiraWorking2.jpeg',
       imageAlt: "Aneira's nature-inspired work",
     },
     {
       id: 3,
       title: 'Artistic Philosophy',
-      content:
-        "At the core of Aneira's work is a belief that [artistic philosophy]. She approaches each piece with [methodology/mindset], creating art that [impact/purpose]. Through her ongoing exploration of [themes/techniques], Aneria continues to develop a body of work that resonates with viewers on multiple levels, inviting them to experience art as a form of connection and reflection.",
+      content: '',
       imagePath: '/static/images/AneiraWorking3.jpeg',
       imageAlt: 'Aneira in her studio',
     },
