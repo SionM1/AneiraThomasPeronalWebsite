@@ -30,18 +30,14 @@ export default function ContactPage() {
       {/* Hero Section */}
       <div className="py-16 sm:py-20 md:py-24">
         <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16">
-          <div className="text-center">
+          <div className="text-left">
             <h1
-              className={`${coveredByYourGrace.className} text-3xl sm:text-4xl md:text-5xl lg:text-6xl`}
-              style={{ color: '#DED308' }}
+              className="mb-4 text-3xl sm:text-4xl md:text-5xl lg:text-6xl"
+              style={{ color: '#DED308', fontFamily: 'Menlo', fontWeight: 'bold' }}
             >
               Get In Touch
             </h1>
-            <p className="mx-auto mt-3 max-w-3xl text-base text-gray-600 sm:mt-4 sm:text-lg md:text-xl">
-              I'd love to hear from you. Whether you're interested in commissioning a piece,
-              discussing an exhibition, or simply want to connect, please don't hesitate to reach
-              out.
-            </p>
+            <div className="w-24 border-b-2 border-gray-300"></div>
           </div>
         </div>
       </div>
