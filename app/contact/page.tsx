@@ -28,7 +28,7 @@ export default function ContactPage() {
       </div>
 
       {/* Main Content (moved page H1 into left column) */}
-      <div className="w-full px-4 pt-24 pb-12 sm:px-6 sm:pt-28 sm:pb-14 md:pt-32 md:pb-16 lg:px-8 xl:px-12 2xl:px-16">
+      <div className="w-full px-4 pt-32 pb-12 sm:px-6 sm:pt-36 sm:pb-14 md:pt-44 md:pb-16 lg:px-8 xl:px-12 2xl:px-16">
         <div className="grid grid-cols-1 gap-12 sm:gap-14 md:gap-16 lg:grid-cols-2">
           {/* Left: Title + Info */}
           <div className="space-y-6 sm:space-y-8">

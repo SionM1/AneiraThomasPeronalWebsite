@@ -1,217 +1,234 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
-import { Covered_By_Your_Grace } from 'next/font/google'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import Image from 'next/image'
+import { Covered_By_Your_Grace } from 'next/font/google'
 
-const coveredByYourGrace = Covered_By_Your_Grace({
-  weight: '400',
-  subsets: ['latin'],
-})
+const coveredByYourGrace = Covered_By_Your_Grace({ weight: '400', subsets: ['latin'] })
+const BRAND = '#DED308'
+
+/* ---------- small hooks ---------- */
+
+// reveal once when the root section scrolls into view
+function useReveal(ref: React.RefObject<Element>, threshold = 0.15) {
+  const [shown, setShown] = useState(false)
+  useEffect(() => {
+    if (!ref.current) return
+    const io = new IntersectionObserver(
+      ([e]) => {
+        if (e.isIntersecting) setShown(true)
+      },
+      { threshold }
+    )
+    io.observe(ref.current)
+    return () => io.disconnect()
+  }, [ref, threshold])
+  return shown
+}
+
+// per-element parallax (relative to its own position, not page scroll)
+// pass a speed like 0.12, -0.1, etc
+function useParallax(ref: React.RefObject<HTMLElement>, speed = 0.12) {
+  const [y, setY] = useState(0)
+
+  const reduced = useMemo(
+    () =>
+      typeof window !== 'undefined' &&
+      window.matchMedia('(prefers-reduced-motion: reduce)').matches,
+    []
+  )
+
+  useEffect(() => {
+    if (!ref.current || reduced) return
+
+    let raf = 0
+    const onScroll = () => {
+      raf =
+        raf ||
+        requestAnimationFrame(() => {
+          const el = ref.current!
+          const rect = el.getBoundingClientRect()
+          // distance from center of viewport
+          const delta = rect.top + rect.height / 2 - window.innerHeight / 2
+          // clamp so we don’t drift too far
+          const translated = Math.max(-80, Math.min(80, -delta * speed))
+          setY(translated)
+          raf = 0
+        })
+    }
+
+    onScroll()
+    window.addEventListener('scroll', onScroll, { passive: true })
+    window.addEventListener('resize', onScroll)
+    return () => {
+      if (raf) cancelAnimationFrame(raf)
+      window.removeEventListener('scroll', onScroll)
+      window.removeEventListener('resize', onScroll)
+    }
+  }, [ref, speed, reduced])
+
+  return reduced ? 0 : y
+}
+
+/* ---------- page ---------- */
 
 export default function AboutPage() {
-  const [isVisible, setIsVisible] = useState(false)
-  const [scrollY, setScrollY] = useState(0)
-  const sectionRef = useRef<HTMLDivElement>(null)
+  const rootRef = useRef<HTMLDivElement>(null)
+  const show = useReveal(rootRef)
 
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisible(true)
-        }
-      },
-      {
-        threshold: 0.2,
-        rootMargin: '0px 0px -50px 0px',
-      }
-    )
+  // image refs for parallax
+  const img1Ref = useRef<HTMLDivElement>(null)
+  const img2Ref = useRef<HTMLDivElement>(null)
+  const img3Ref = useRef<HTMLDivElement>(null)
 
-    if (sectionRef.current) {
-      observer.observe(sectionRef.current)
-    }
-
-    return () => observer.disconnect()
-  }, [])
-
-  // Parallax scroll effect
-  useEffect(() => {
-    const handleScroll = () => {
-      setScrollY(window.scrollY)
-    }
-
-    window.addEventListener('scroll', handleScroll)
-    return () => window.removeEventListener('scroll', handleScroll)
-  }, [])
+  const y1 = useParallax(img1Ref, 0.12) // slow
+  const y2 = useParallax(img2Ref, -0.1) // opposite direction
+  const y3 = useParallax(img3Ref, 0.14) // a touch faster
 
   return (
-    <div className="relative left-1/2 min-h-screen w-screen -translate-x-1/2 transform">
-      {/* About Section - Break Out of SectionContainer */}
-      <div
-        ref={sectionRef}
-        className={`w-full bg-white py-24 transition-all duration-1000 ease-out ${
-          isVisible ? 'translate-y-0 opacity-100' : 'translate-y-12 opacity-0'
-        }`}
-        style={{ width: '100vw' }}
+    <div className="relative left-1/2 w-screen -translate-x-1/2 bg-white">
+      {/* page padding wrapper */}
+      <section
+        ref={rootRef}
+        className={`mx-auto max-w-7xl px-4 py-20 transition-all duration-700 sm:px-6 sm:py-24 lg:px-10 ${show ? 'translate-y-0 opacity-100' : 'translate-y-6 opacity-0'}`}
       >
-        {/* Aneira Thomas Header - Top Left Position (scrolls naturally) */}
-        <div className="absolute top-4 left-4 z-[60] sm:top-6 sm:left-6 md:left-8">
+        {/* name lockup / header */}
+        <div className="relative mb-8 sm:mb-10 md:mb-12">
           <h1
-            className={`${coveredByYourGrace.className} text-2xl sm:text-3xl md:text-4xl lg:text-5xl`}
-            style={{ color: '#DED308' }}
+            className={`${coveredByYourGrace.className} text-3xl sm:text-4xl md:text-5xl`}
+            style={{ color: BRAND }}
           >
             Aneira Thomas
           </h1>
         </div>
 
-        {/* Section Title - Left Aligned with Divider */}
-        <div className="w-full px-4 pt-24 sm:px-6 sm:pt-28 md:px-8 md:pt-32 lg:px-16 lg:pt-32 xl:px-24 xl:pt-32 2xl:px-32">
-          <div
-            className={`mb-8 w-full transition-all duration-1200 ease-out sm:mb-10 md:mb-12 ${
-              isVisible ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'
-            }`}
-            style={{ transitionDelay: '200ms' }}
+        {/* section title */}
+        <div className="mb-10 sm:mb-12 md:mb-14">
+          <h2
+            className="text-3xl font-bold sm:text-4xl md:text-5xl"
+            style={{ color: BRAND, fontFamily: 'Menlo' }}
           >
-            <h2
-              className="mb-4 text-3xl sm:mb-6 sm:text-4xl md:text-5xl lg:text-6xl"
-              style={{ color: '#DED308', fontFamily: 'Menlo', fontWeight: 'bold' }}
-            >
-              About
-            </h2>
-          </div>
-          {/* Divider Line */}
-          <div className="mb-8 w-full border-b border-gray-200 sm:mb-12 md:mb-16"></div>
+            About
+          </h2>
+          <div className="mt-4 h-px w-full bg-gray-200" />
         </div>
 
-        {/* Artist Statement Section */}
-        <div className="w-full px-4 sm:px-6 md:px-8 lg:px-16 xl:px-24 2xl:px-32">
-          {/* Section Title */}
-          <div className="mb-12 md:mb-16 lg:mb-20">
-            <h3
-              className="mb-4 text-3xl md:text-4xl lg:text-5xl"
-              style={{ color: '#DED308', fontFamily: 'Menlo', fontWeight: 'bold' }}
+        {/* row #1 */}
+        <div className="mb-16 grid grid-cols-1 items-center gap-8 lg:mb-24 lg:grid-cols-12 lg:gap-12 xl:gap-16">
+          {/* text */}
+          <div className="space-y-6 lg:col-span-6">
+            <p
+              className="text-base leading-8 text-gray-900 md:text-lg"
+              style={{ fontFamily: 'Menlo' }}
             >
-              Artist Statement
-            </h3>
-            <div className="w-24 border-b-2 border-gray-300"></div>
+              Aneira Thomas&apos;s practice explores her deep connection with nature and produces
+              surfaces full of movement, patterns and layers. Whilst reminiscing her memories, she
+              pulls visual prompts from organic details of nature as a symbol of time passing.
+            </p>
+            <p
+              className="text-base leading-8 text-gray-900 md:text-lg"
+              style={{ fontFamily: 'Menlo' }}
+            >
+              Through bright colourful surfaces, Thomas longs to feel connected to nature and
+              explores this relationship through mark making and slower-paced methods such as
+              extracting natural pigments and traditional painting techniques.
+            </p>
           </div>
 
-          {/* Content with Parallax Images */}
-          <div className="space-y-20 md:space-y-32 lg:space-y-40">
-            {/* First Section */}
-            <div className="grid grid-cols-1 gap-8 lg:grid-cols-2 lg:gap-16 xl:gap-20">
-              <div className="space-y-6 lg:space-y-8">
-                <p
-                  className="text-base leading-relaxed text-gray-900 md:text-lg lg:text-xl"
-                  style={{ fontFamily: 'Menlo', lineHeight: '1.7' }}
-                >
-                  My work explores the intricate relationship between human emotion and the natural
-                  world. Growing up surrounded by the rolling hills and ancient woodlands of Wales,
-                  I developed an early fascination with the way light moves through landscapes and
-                  how organic forms can express the ineffable.
-                </p>
-                <p
-                  className="text-base leading-relaxed text-gray-900 md:text-lg lg:text-xl"
-                  style={{ fontFamily: 'Menlo', lineHeight: '1.7' }}
-                >
-                  My artistic journey began in childhood, sketching the changing seasons from my
-                  bedroom window. This intimate observation of nature's rhythms became the
-                  foundation for my mature practice, where I translate fleeting moments of natural
-                  beauty into lasting visual experiences.
-                </p>
-              </div>
-              <div
-                className="relative order-first lg:order-none"
-                style={{ transform: `translateY(${scrollY * 0.2}px)` }}
-              >
-                <div className="relative aspect-[4/3] w-full overflow-hidden border-2 border-gray-200 shadow-lg md:aspect-[3/2] lg:aspect-[4/5]">
-                  <Image
-                    src="/static/images/AneiraWorking1.jpeg"
-                    alt="Aneira Thomas in her studio"
-                    fill
-                    className="object-cover object-center transition-transform duration-700 hover:scale-105"
-                    sizes="(max-width: 1024px) 100vw, 50vw"
-                    priority
-                  />
-                </div>
-              </div>
-            </div>
-
-            {/* Second Section */}
-            <div className="grid grid-cols-1 gap-8 lg:grid-cols-2 lg:gap-16 xl:gap-20">
-              <div className="relative" style={{ transform: `translateY(${scrollY * -0.15}px)` }}>
-                <div className="relative aspect-[4/3] w-full overflow-hidden border-2 border-gray-200 shadow-lg md:aspect-[3/2] lg:aspect-[4/5]">
-                  <Image
-                    src="/static/images/AneiraWorking2.jpeg"
-                    alt="Aneira Thomas working with natural materials"
-                    fill
-                    className="object-cover object-center transition-transform duration-700 hover:scale-105"
-                    sizes="(max-width: 1024px) 100vw, 50vw"
-                  />
-                </div>
-              </div>
-              <div className="space-y-6 lg:space-y-8">
-                <p
-                  className="text-base leading-relaxed text-gray-900 md:text-lg lg:text-xl"
-                  style={{ fontFamily: 'Menlo', lineHeight: '1.7' }}
-                >
-                  Each piece begins with careful observation and collection of natural elements -
-                  fragments of bark, pressed flowers, sketches of cloud formations. These gathered
-                  materials become the starting point for paintings and mixed-media works that
-                  capture not just the appearance of nature, but its essential spirit.
-                </p>
-                <p
-                  className="text-base leading-relaxed text-gray-900 md:text-lg lg:text-xl"
-                  style={{ fontFamily: 'Menlo', lineHeight: '1.7' }}
-                >
-                  I approach each work with reverence for the materials themselves, allowing their
-                  inherent qualities to guide the creative process rather than imposing a
-                  predetermined vision. Through ongoing exploration of texture, color, and form, I
-                  continue to develop a body of work that invites viewers to slow down and reconnect
-                  with the quiet wisdom found in nature's patterns.
-                </p>
-              </div>
-            </div>
-
-            {/* Third Section */}
-            <div className="grid grid-cols-1 gap-8 lg:grid-cols-2 lg:gap-16 xl:gap-20">
-              <div className="space-y-6 lg:space-y-8">
-                <p
-                  className="text-base leading-relaxed text-gray-900 md:text-lg lg:text-xl"
-                  style={{ fontFamily: 'Menlo', lineHeight: '1.7' }}
-                >
-                  My art serves as a bridge between the human experience and the natural world,
-                  creating works that feel alive with natural energy. The subtle interplay of shadow
-                  and light, the delicate architecture of organic forms, and the weathered textures
-                  of ancient surfaces all inform my choice of materials and techniques.
-                </p>
-                <p
-                  className="text-base leading-relaxed text-gray-900 md:text-lg lg:text-xl"
-                  style={{ fontFamily: 'Menlo', lineHeight: '1.7' }}
-                >
-                  Ultimately, my work serves as a gentle reminder of our deep interdependence with
-                  the living world around us, encouraging a slower, more contemplative engagement
-                  with the beauty that surrounds us every day.
-                </p>
-              </div>
-              <div
-                className="relative order-first lg:order-none"
-                style={{ transform: `translateY(${scrollY * 0.25}px)` }}
-              >
-                <div className="relative aspect-[4/3] w-full overflow-hidden border-2 border-gray-200 shadow-lg md:aspect-[3/2] lg:aspect-[4/5]">
-                  <Image
-                    src="/static/images/AneiraWorking3.jpeg"
-                    alt="Aneira Thomas in her artistic environment"
-                    fill
-                    className="object-cover object-center transition-transform duration-700 hover:scale-105"
-                    sizes="(max-width: 1024px) 100vw, 50vw"
-                  />
-                </div>
-              </div>
+          {/* image */}
+          <div ref={img1Ref} className="lg:col-span-6">
+            <div
+              className="relative aspect-[4/3] w-full overflow-hidden border border-gray-200 shadow-md md:aspect-[3/2]"
+              style={{ transform: `translateY(${y1}px)` }}
+            >
+              <Image
+                src="/static/images/AneiraWorking1.jpeg"
+                alt="In the studio"
+                fill
+                className="object-cover transition-transform duration-700 hover:scale-105"
+                sizes="(max-width: 1024px) 100vw, 50vw"
+                priority
+              />
+              <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/10 to-transparent opacity-0 transition-opacity duration-500 hover:opacity-100" />
             </div>
           </div>
         </div>
-      </div>
+
+        {/* row #2 (flip) */}
+        <div className="mb-16 grid grid-cols-1 items-center gap-8 lg:mb-24 lg:grid-cols-12 lg:gap-12 xl:gap-16">
+          {/* image */}
+          <div ref={img2Ref} className="order-first lg:order-none lg:col-span-6">
+            <div
+              className="relative aspect-[4/3] w-full overflow-hidden border border-gray-200 shadow-md md:aspect-[3/2]"
+              style={{ transform: `translateY(${y2}px)` }}
+            >
+              <Image
+                src="/static/images/AneiraWorking2.jpeg"
+                alt="Natural materials and process"
+                fill
+                className="object-cover transition-transform duration-700 hover:scale-105"
+                sizes="(max-width: 1024px) 100vw, 50vw"
+              />
+            </div>
+          </div>
+
+          {/* text */}
+          <div className="space-y-6 lg:col-span-6">
+            <p
+              className="text-base leading-8 text-gray-900 md:text-lg"
+              style={{ fontFamily: 'Menlo' }}
+            >
+              Materials guide the process rather than a fixed outcome. Collected fragments—bark,
+              pressed flowers, pencil notes—seed layered works that capture both the appearance and
+              the spirit of the natural world.
+            </p>
+            <p
+              className="text-base leading-8 text-gray-900 md:text-lg"
+              style={{ fontFamily: 'Menlo' }}
+            >
+              The work invites a slower pace: to pause, remember, and reconnect with the rhythms we
+              share with the landscape.
+            </p>
+          </div>
+        </div>
+
+        {/* row #3 */}
+        <div className="grid grid-cols-1 items-center gap-8 lg:grid-cols-12 lg:gap-12 xl:gap-16">
+          {/* text */}
+          <div className="space-y-6 lg:col-span-6">
+            <p
+              className="text-base leading-8 text-gray-900 md:text-lg"
+              style={{ fontFamily: 'Menlo' }}
+            >
+              Light, shadow, and the delicate architecture of organic forms shape a practice aimed
+              at creating living surfaces—paintings that feel like they breathe.
+            </p>
+            <p
+              className="text-base leading-8 text-gray-900 md:text-lg"
+              style={{ fontFamily: 'Menlo' }}
+            >
+              Ultimately the work is a reminder of interdependence with the living world—a quiet
+              invitation to look longer, and feel more.
+            </p>
+          </div>
+
+          {/* image */}
+          <div ref={img3Ref} className="lg:col-span-6">
+            <div
+              className="relative aspect-[4/3] w-full overflow-hidden border border-gray-200 shadow-md md:aspect-[3/2]"
+              style={{ transform: `translateY(${y3}px)` }}
+            >
+              <Image
+                src="/static/images/AneiraWorking3.jpeg"
+                alt="Artistic environment"
+                fill
+                className="object-cover transition-transform duration-700 hover:scale-105"
+                sizes="(max-width: 1024px) 100vw, 50vw"
+              />
+            </div>
+          </div>
+        </div>
+      </section>
     </div>
   )
 }
