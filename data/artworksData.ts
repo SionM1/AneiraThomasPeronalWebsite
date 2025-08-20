@@ -156,7 +156,7 @@ export const artworksData: Artwork[] = [
     title: 'Cynffon y tân',
     medium: 'Distemper and oil paint on canvas',
     size: '45x75cm',
-    imagePath: '/static/images/Website%20gallery/Cynffon%20y%20t%C3%A2n.jpeg',
+    imagePath: '/static/images/Website%20gallery/Cynffonytan.jpeg',
     year: 2025,
     available: true,
     dateAdded: '2025-01-05',

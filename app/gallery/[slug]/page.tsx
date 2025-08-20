@@ -8,10 +8,10 @@ import { getArtworkBySlug, getAllArtworks } from '@/data/artworksData'
 const coveredByYourGrace = Covered_By_Your_Grace({ weight: '400', subsets: ['latin'] })
 
 interface PageProps {
-  params: { slug: string }
+  params: Promise<{ slug: string }>
 }
 
-export function generateStaticParams() {
+export async function generateStaticParams() {
   const artworks = getAllArtworks()
   return artworks.map((a) => ({ slug: a.slug }))
 }
@@ -19,8 +19,9 @@ export function generateStaticParams() {
 // optional: keep if you want 404 for unknown slugs at build time
 export const dynamicParams = false
 
-export function generateMetadata({ params }: PageProps): Metadata {
-  const artwork = getArtworkBySlug(params.slug)
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const { slug } = await params
+  const artwork = getArtworkBySlug(slug)
   if (!artwork) return {}
 
   return {
@@ -32,8 +33,9 @@ export function generateMetadata({ params }: PageProps): Metadata {
   }
 }
 
-export default function ArtworkPage({ params }: PageProps) {
-  const artwork = getArtworkBySlug(params.slug)
+export default async function ArtworkPage({ params }: PageProps) {
+  const { slug } = await params
+  const artwork = getArtworkBySlug(slug)
   if (!artwork) notFound()
 
   return (
