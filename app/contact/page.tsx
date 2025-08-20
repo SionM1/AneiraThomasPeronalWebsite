@@ -27,35 +27,32 @@ export default function ContactPage() {
         </h1>
       </div>
 
-      {/* Hero Section */}
-      <div className="py-16 sm:py-20 md:py-24">
-        <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16">
-          <div className="text-left">
-            <h1
-              className="mb-4 text-3xl sm:text-4xl md:text-5xl lg:text-6xl"
-              style={{ color: '#DED308', fontFamily: 'Menlo', fontWeight: 'bold' }}
-            >
-              Get In Touch
-            </h1>
-            <div className="w-24 border-b-2 border-gray-300"></div>
-          </div>
-        </div>
-      </div>
-
-      {/* Main Content */}
-      <div className="w-full px-4 py-12 sm:px-6 sm:py-14 md:py-16 lg:px-8 xl:px-12 2xl:px-16">
+      {/* Main Content (moved page H1 into left column) */}
+      <div className="w-full px-4 pt-24 pb-12 sm:px-6 sm:pt-28 sm:pb-14 md:pt-32 md:pb-16 lg:px-8 xl:px-12 2xl:px-16">
         <div className="grid grid-cols-1 gap-12 sm:gap-14 md:gap-16 lg:grid-cols-2">
-          {/* Contact Information */}
+          {/* Left: Title + Info */}
           <div className="space-y-6 sm:space-y-8">
+            {/* NEW: Page title (moved from hero) */}
+            <div className="text-left">
+              <h1
+                className="mb-4 text-3xl sm:text-4xl md:text-5xl lg:text-6xl"
+                style={{ color: '#DED308', fontFamily: 'Menlo', fontWeight: 'bold' }}
+              >
+                Get In Touch
+              </h1>
+              <div className="w-24 border-b-2 border-gray-300"></div>
+            </div>
+
+            {/* Section: Let's Connect */}
             <div>
               <h2
                 className={`${coveredByYourGrace.className} mb-4 text-2xl sm:mb-6 sm:text-3xl md:text-4xl`}
                 style={{ color: '#DED308' }}
               >
-                Let's Connect
+                Let&apos;s Connect
               </h2>
               <p className="mb-6 text-base text-gray-600 sm:mb-8 sm:text-lg">
-                I'm always excited to discuss new projects, collaborate with fellow artists, or
+                I&apos;m always excited to discuss new projects, collaborate with fellow artists, or
                 share insights about my work and process.
               </p>
             </div>
@@ -212,7 +209,7 @@ export default function ContactPage() {
             </div>
           </div>
 
-          {/* Contact Form */}
+          {/* Right: Contact Form */}
           <div>
             <ContactForm />
           </div>

@@ -5,65 +5,54 @@ import Link from 'next/link'
 import { Covered_By_Your_Grace } from 'next/font/google'
 import { getArtworkBySlug, getAllArtworks } from '@/data/artworksData'
 
-const coveredByYourGrace = Covered_By_Your_Grace({
-  weight: '400',
-  subsets: ['latin'],
-})
+const coveredByYourGrace = Covered_By_Your_Grace({ weight: '400', subsets: ['latin'] })
 
-interface ArtworkPageProps {
-  params: Promise<{
-    slug: string
-  }>
+interface PageProps {
+  params: { slug: string }
 }
 
-export async function generateStaticParams() {
+export function generateStaticParams() {
   const artworks = getAllArtworks()
-  return artworks.map((artwork) => ({
-    slug: artwork.slug,
-  }))
+  return artworks.map((a) => ({ slug: a.slug }))
 }
 
-export async function generateMetadata({ params }: ArtworkPageProps): Promise<Metadata> {
-  const { slug } = await params
-  const artwork = getArtworkBySlug(slug)
+// optional: keep if you want 404 for unknown slugs at build time
+export const dynamicParams = false
 
-  if (!artwork) {
-    return {}
-  }
+export function generateMetadata({ params }: PageProps): Metadata {
+  const artwork = getArtworkBySlug(params.slug)
+  if (!artwork) return {}
 
   return {
     title: artwork.title,
-    description: artwork.description,
     openGraph: {
       title: artwork.title,
-      description: artwork.description,
       images: [artwork.imagePath],
     },
   }
 }
 
-export default async function ArtworkPage({ params }: ArtworkPageProps) {
-  const { slug } = await params
-  const artwork = getArtworkBySlug(slug)
-
-  if (!artwork) {
-    notFound()
-  }
+export default function ArtworkPage({ params }: PageProps) {
+  const artwork = getArtworkBySlug(params.slug)
+  if (!artwork) notFound()
 
   return (
     <div className="min-h-screen bg-white">
-      {/* Aneira Thomas Header - Top Left Position */}
-      <div className="absolute top-6 left-8 z-[60]">
-        <h1 className={`${coveredByYourGrace.className} text-5xl`} style={{ color: '#DED308' }}>
+      {/* Header */}
+      <div className="absolute top-4 left-4 z-[60] sm:top-6 sm:left-6">
+        <h1
+          className={`${coveredByYourGrace.className} text-3xl sm:text-4xl lg:text-5xl`}
+          style={{ color: '#DED308' }}
+        >
           Aneira Thomas
         </h1>
       </div>
 
-      {/* Back button */}
-      <div className="px-4 pt-32 sm:px-6 lg:px-8 xl:px-12 2xl:px-16">
+      {/* Back */}
+      <div className="px-4 pt-20 sm:px-6 sm:pt-24 lg:px-8">
         <Link
           href="/gallery"
-          className="group mb-8 inline-flex items-center"
+          className="group mb-6 inline-flex items-center"
           style={{ color: '#DED308', fontFamily: 'Menlo', fontWeight: 'bold' }}
         >
           <svg
@@ -83,73 +72,62 @@ export default async function ArtworkPage({ params }: ArtworkPageProps) {
         </Link>
       </div>
 
-      {/* Main content area */}
-      <div className="px-4 pb-24 sm:px-6 lg:px-8 xl:px-12 2xl:px-16">
-        <div className="grid grid-cols-1 gap-16 lg:gap-20 xl:grid-cols-5">
-          {/* Image - Takes up more space and centers itself */}
-          <div className="flex justify-center xl:col-span-3">
-            <div className="relative max-w-full">
-              <div className="overflow-hidden border-2 border-gray-200">
-                <Image
-                  src={artwork.imagePath}
-                  alt={artwork.title}
-                  width={1200}
-                  height={900}
-                  className="h-auto w-full object-contain"
-                  sizes="(max-width: 1280px) 100vw, 60vw"
-                  priority
-                />
-              </div>
+      {/* Content */}
+      <div className="px-4 pb-8 sm:px-6 lg:px-8">
+        <div className="grid grid-cols-1 gap-8 lg:grid-cols-3 lg:gap-12">
+          {/* Image – square corners, no internal letterboxing */}
+          <div className="lg:col-span-2">
+            <div className="flex items-center justify-center">
+              <Image
+                src={artwork.imagePath}
+                alt={artwork.title}
+                width={2000}
+                height={2000}
+                priority
+                sizes="(max-width: 1024px) 100vw, 66vw"
+                className="block h-[70svh] w-auto shadow-lg" // ← no rounded-lg
+                style={{ objectFit: 'contain' }}
+              />
             </div>
           </div>
-
-          {/* Details - Takes up remaining space */}
-          <div className="xl:col-span-2">
-            <div className="flex flex-col justify-start space-y-8">
+          {/* Details */}
+          <div className="lg:col-span-1">
+            <div className="space-y-6">
               <div>
                 <h1
-                  className="mb-4 text-4xl italic"
+                  className="mb-3 text-2xl italic sm:text-3xl lg:text-4xl"
                   style={{ color: '#DED308', fontFamily: 'Menlo', fontWeight: 'bold' }}
                 >
                   {artwork.title}
                 </h1>
                 {artwork.year && (
-                  <p
-                    className="text-xl"
-                    style={{ fontFamily: 'Menlo', fontWeight: '400', color: '#000' }}
-                  >
+                  <p className="text-lg sm:text-xl" style={{ fontFamily: 'Menlo', color: '#000' }}>
                     {artwork.year}
                   </p>
                 )}
               </div>
 
-              <div className="space-y-6">
+              <div className="space-y-4">
                 <div>
                   <h3
-                    className="mb-2 text-sm tracking-wide uppercase"
+                    className="mb-2 text-xs tracking-wide uppercase"
                     style={{ fontFamily: 'Menlo', fontWeight: 'bold', color: '#000' }}
                   >
                     Medium
                   </h3>
-                  <p
-                    className="text-lg"
-                    style={{ fontFamily: 'Menlo', fontWeight: '400', color: '#000' }}
-                  >
+                  <p className="text-base" style={{ fontFamily: 'Menlo', color: '#000' }}>
                     {artwork.medium}
                   </p>
                 </div>
 
                 <div>
                   <h3
-                    className="mb-2 text-sm tracking-wide uppercase"
+                    className="mb-2 text-xs tracking-wide uppercase"
                     style={{ fontFamily: 'Menlo', fontWeight: 'bold', color: '#000' }}
                   >
                     Dimensions
                   </h3>
-                  <p
-                    className="text-lg"
-                    style={{ fontFamily: 'Menlo', fontWeight: '400', color: '#000' }}
-                  >
+                  <p className="text-base" style={{ fontFamily: 'Menlo', color: '#000' }}>
                     {artwork.size}
                   </p>
                 </div>
@@ -157,16 +135,15 @@ export default async function ArtworkPage({ params }: ArtworkPageProps) {
                 {artwork.available !== undefined && (
                   <div>
                     <h3
-                      className="mb-2 text-sm tracking-wide uppercase"
+                      className="mb-2 text-xs tracking-wide uppercase"
                       style={{ fontFamily: 'Menlo', fontWeight: 'bold', color: '#000' }}
                     >
                       Availability
                     </h3>
                     <p
-                      className="text-lg"
+                      className="text-base"
                       style={{
                         fontFamily: 'Menlo',
-                        fontWeight: '400',
                         color: artwork.available ? '#059669' : '#DC2626',
                       }}
                     >
@@ -178,32 +155,28 @@ export default async function ArtworkPage({ params }: ArtworkPageProps) {
                 {artwork.price && artwork.available && (
                   <div>
                     <h3
-                      className="mb-2 text-sm tracking-wide uppercase"
+                      className="mb-2 text-xs tracking-wide uppercase"
                       style={{ fontFamily: 'Menlo', fontWeight: 'bold', color: '#000' }}
                     >
                       Price
                     </h3>
-                    <p
-                      className="text-lg"
-                      style={{ fontFamily: 'Menlo', fontWeight: '400', color: '#000' }}
-                    >
+                    <p className="text-base" style={{ fontFamily: 'Menlo', color: '#000' }}>
                       {artwork.price}
                     </p>
                   </div>
                 )}
               </div>
 
-              {/* Contact/Inquiry button */}
               <div className="pt-4">
                 <Link
                   href="/contact"
-                  className="inline-flex items-center rounded-full border-2 px-8 py-4 text-lg font-medium transition-colors duration-300 hover:scale-105"
+                  className="inline-flex items-center rounded-full border-2 px-6 py-3 text-base font-medium transition-transform hover:scale-105"
                   style={{
                     color: '#DED308',
                     borderColor: '#DED308',
                     fontFamily: 'Menlo',
                     fontWeight: 'bold',
-                    backgroundColor: 'rgba(222, 211, 8, 0.1)',
+                    backgroundColor: 'rgba(222, 211, 8, 0.08)',
                   }}
                 >
                   Inquire About This Piece
