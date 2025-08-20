@@ -193,28 +193,8 @@ export default async function ArtworkPage({ params }: ArtworkPageProps) {
                 )}
               </div>
 
-              <div>
-                <h3
-                  className="mb-4 text-sm tracking-wide uppercase"
-                  style={{ fontFamily: 'Menlo', fontWeight: 'bold', color: '#000' }}
-                >
-                  Description
-                </h3>
-                <p
-                  className="text-lg leading-relaxed"
-                  style={{
-                    fontFamily: 'Menlo',
-                    fontWeight: '400',
-                    color: '#000',
-                    lineHeight: '1.7',
-                  }}
-                >
-                  {artwork.description}
-                </p>
-              </div>
-
               {/* Contact/Inquiry button */}
-              <div className="pt-6">
+              <div className="pt-4">
                 <Link
                   href="/contact"
                   className="inline-flex items-center rounded-full border-2 px-8 py-4 text-lg font-medium transition-colors duration-300 hover:scale-105"
