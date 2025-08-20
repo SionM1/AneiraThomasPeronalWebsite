@@ -79,7 +79,7 @@ export default async function ArtworkPage({ params }: PageProps) {
         <div className="grid grid-cols-1 gap-8 lg:grid-cols-3 lg:gap-12">
           {/* Image – square corners, no internal letterboxing */}
           <div className="lg:col-span-2">
-            <div className="flex items-center justify-center bg-white">
+            <div className="flex items-center justify-center">
               <Image
                 src={artwork.imagePath}
                 alt={artwork.title}
@@ -87,8 +87,8 @@ export default async function ArtworkPage({ params }: PageProps) {
                 height={2000}
                 priority
                 sizes="(max-width: 1024px) 100vw, 66vw"
-                className="block h-[60vh] w-auto object-contain sm:h-[70vh] lg:h-[70svh]"
-                style={{ maxWidth: '100%', height: 'auto' }}
+                className="block h-[70svh] w-auto shadow-lg" // ← no rounded-lg
+                style={{ objectFit: 'contain' }}
               />
             </div>
           </div>
