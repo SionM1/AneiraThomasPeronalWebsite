@@ -121,17 +121,15 @@ export default function AboutPage() {
               className="text-base leading-8 text-gray-900 md:text-lg"
               style={{ fontFamily: 'Menlo' }}
             >
-              Aneira Thomas&apos;s practice explores her deep connection with nature and produces
-              surfaces full of movement, patterns and layers. Whilst reminiscing her memories, she
-              pulls visual prompts from organic details of nature as a symbol of time passing.
+              Aneira Thomas’s practice explores her deep connection with nature and produces
+              surfaces full of movement, patterns and layers.
             </p>
             <p
               className="text-base leading-8 text-gray-900 md:text-lg"
               style={{ fontFamily: 'Menlo' }}
             >
-              Through bright colourful surfaces, Thomas longs to feel connected to nature and
-              explores this relationship through mark making and slower-paced methods such as
-              extracting natural pigments and traditional painting techniques.
+              Whilst reminiscing her memories, she pulls visual prompts from organic details of
+              nature as a symbol of time passing.
             </p>
           </div>
 
@@ -178,16 +176,15 @@ export default function AboutPage() {
               className="text-base leading-8 text-gray-900 md:text-lg"
               style={{ fontFamily: 'Menlo' }}
             >
-              Materials guide the process rather than a fixed outcome. Collected fragments—bark,
-              pressed flowers, pencil notes—seed layered works that capture both the appearance and
-              the spirit of the natural world.
+              Through bright colourful surfaces, Thomas longs to feel connected to nature and
+              explores this relationship through mark making.
             </p>
             <p
               className="text-base leading-8 text-gray-900 md:text-lg"
               style={{ fontFamily: 'Menlo' }}
             >
-              The work invites a slower pace: to pause, remember, and reconnect with the rhythms we
-              share with the landscape.
+              Her practice includes many slower paced methods such as extracting natural pigments,
+              making canvas stretcher bars and using traditional painting techniques.
             </p>
           </div>
         </div>
@@ -200,15 +197,15 @@ export default function AboutPage() {
               className="text-base leading-8 text-gray-900 md:text-lg"
               style={{ fontFamily: 'Menlo' }}
             >
-              Light, shadow, and the delicate architecture of organic forms shape a practice aimed
-              at creating living surfaces—paintings that feel like they breathe.
+              These methods encourage her audience to slow their pace, reflect on their memories and
+              regain a bond with the natural world.
             </p>
             <p
               className="text-base leading-8 text-gray-900 md:text-lg"
               style={{ fontFamily: 'Menlo' }}
             >
-              Ultimately the work is a reminder of interdependence with the living world—a quiet
-              invitation to look longer, and feel more.
+              Thomas approaches her work using a variety of mediums, which allows her to work with
+              several layers that weave into one harmonious surface.
             </p>
           </div>
 

@@ -17,11 +17,12 @@ interface Props {
   exhibitions: Exhibition[]
 }
 
-/** --- Tunables (one place only) --- */
-const STICKY_TOP = 40 // where the SVG sticks
-const HEAD_ANCHOR = STICKY_TOP + 110 // viewport Y where the line head “sits”
-const REVEAL_NODE_OFFSET = 10 // reveal just before the node center
-const EASING_POWER = 1.5 // 1 = linear; >1 slower start, faster end
+const STICKY_TOP = 40
+const EASING_POWER = 1.35
+
+// Node/card reveal “lead” ahead of the line head
+const REVEAL_LEAD_FRACTION = 0.02 // ~2% of total path
+const REVEAL_LEAD_PIXELS = 24 // at least 24px
 
 export default function ExhibitionTimeline({ exhibitions }: Props) {
   const timelineRef = useRef<HTMLDivElement>(null)
@@ -29,13 +30,11 @@ export default function ExhibitionTimeline({ exhibitions }: Props) {
   const sectionRefs = useRef<(HTMLDivElement | null)[]>([])
   sectionRefs.current = sectionRefs.current.slice(0, exhibitions.length)
 
-  const [pathLen, setPathLen] = useState(1)
-  const [progress, setProgress] = useState(0) // 0..1 head along path
-  const [nodeStopsPx, setNodeStopsPx] = useState<number[]>([]) // node Y positions inside the timeline
-  const [permaReveal, setPermaReveal] = useState<Set<number>>(new Set())
+  const [progress, setProgress] = useState(0)
+  const [revealedExhibitions, setRevealedExhibitions] = useState<Set<number>>(new Set())
   const [highlight, setHighlight] = useState<number | null>(null)
 
-  /** Responsive geometry (same values used for path + nodes) */
+  // Responsive geometry
   const SPACING =
     typeof window === 'undefined'
       ? 300
@@ -44,15 +43,12 @@ export default function ExhibitionTimeline({ exhibitions }: Props) {
         : window.innerWidth < 1024
           ? 260
           : 300
-
   const AMPLITUDE = 60
   const CENTER_X = 60
-  const NODE_START = SPACING * 0.2 // initial M … Y
-
-  /** Where each node sits vertically INSIDE the timeline (px) */
+  const NODE_START = SPACING * 0.2
   const nodeY = (i: number) => NODE_START + (i + 1) * SPACING
 
-  /** Build the winding path */
+  // Build the winding path
   const d = useMemo(() => {
     let p = `M${CENTER_X},${NODE_START}`
     exhibitions.forEach((_, i) => {
@@ -65,7 +61,6 @@ export default function ExhibitionTimeline({ exhibitions }: Props) {
       p += ` C${c1x},${c1y} ${c2x},${c2y} ${CENTER_X},${y}`
     })
     return p
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [exhibitions.length, SPACING])
 
   const totalSvgH = useMemo(
@@ -73,82 +68,78 @@ export default function ExhibitionTimeline({ exhibitions }: Props) {
     [exhibitions.length, SPACING]
   )
 
-  /** Measure exact path length for perfect dash animation */
+  // Get path length
+  const [pathLen, setPathLen] = useState(1)
   useLayoutEffect(() => {
-    if (pathRef.current) setPathLen(pathRef.current.getTotalLength() || 1)
+    const path = pathRef.current
+    if (path) {
+      setPathLen(path.getTotalLength() || 1)
+    }
   }, [d])
 
   /**
-   * PROGRESS MODEL:
-   * Head position = (scrollY + HEAD_ANCHOR) - timelineTopAbs
-   * Progress      = clamp( head / timelineHeight, 0..1 )
-   * Nodes/cards reveal when head reaches each nodeY(i).
+   * UNIFIED SCROLL SYSTEM - Timeline and exhibitions in perfect sync
    */
   useEffect(() => {
-    if (!timelineRef.current) return
+    const handleScroll = () => {
+      if (!timelineRef.current) return
 
-    let tTopAbs = 0
-    let tHeight = 1
-    let stops: number[] = []
+      const timelineRect = timelineRef.current.getBoundingClientRect()
+      const scrollY = window.scrollY
+      const viewportHeight = window.innerHeight
 
-    const measure = () => {
-      const tRect = timelineRef.current!.getBoundingClientRect()
-      tTopAbs = window.scrollY + tRect.top
-      tHeight = Math.max(1, tRect.height)
+      // Calculate when timeline section starts and ends relative to scroll
+      const timelineTop = scrollY + timelineRect.top
+      const timelineHeight = timelineRect.height
+      const viewportCenter = scrollY + viewportHeight / 2
 
-      // Node thresholds based on the geometry of the path (not card positions)
-      stops = exhibitions.map((_, i) => nodeY(i))
-      setNodeStopsPx(stops)
+      // Progress: slow start, fast middle/end - MUST reach 100%
+      let scrollProgress = 0
+      if (viewportCenter >= timelineTop) {
+        const scrolledPastStart = viewportCenter - timelineTop
+        const totalScrollDistance = timelineHeight * 0.85 // Shorter distance to ensure 100%
+        const rawProgress = Math.min(1, scrolledPastStart / totalScrollDistance)
 
-      // initial progress (0 until the timeline reaches the anchor)
-      const headInTimeline = window.scrollY + HEAD_ANCHOR - tTopAbs
-      setProgress(headInTimeline > 0 ? Math.min(1, headInTimeline / tHeight) : 0)
-    }
+        // Apply easing: slow start, moderate acceleration in middle/end
+        scrollProgress = rawProgress * rawProgress * (3 - 2 * rawProgress) // Smoothstep easing
 
-    let raf = 0
-    const onScroll = () => {
-      raf =
-        raf ||
-        requestAnimationFrame(() => {
-          const headInTimeline = window.scrollY + HEAD_ANCHOR - tTopAbs
+        // Ensure we hit 100% by clamping
+        scrollProgress = Math.min(1, scrollProgress * 1.1)
+      }
 
-          if (headInTimeline <= 0) {
-            setProgress(0) // draw nothing until we actually reach the timeline
-            raf = 0
-            return
+      setProgress(scrollProgress)
+
+      // Reveal exhibitions as they come into view (and keep them revealed)
+      const newRevealed = new Set(revealedExhibitions)
+      sectionRefs.current.forEach((sectionEl, i) => {
+        if (sectionEl) {
+          const rect = sectionEl.getBoundingClientRect()
+          // Reveal when top 80% of viewport
+          if (rect.top < viewportHeight * 0.8) {
+            newRevealed.add(i)
           }
+        }
+      })
 
-          const p = Math.min(1, Math.max(0, headInTimeline / tHeight))
-          setProgress(p)
-
-          // One-time reveal when head passes each node
-          const next = new Set(permaReveal)
-          stops.forEach((stop, i) => {
-            if (headInTimeline >= stop - REVEAL_NODE_OFFSET) next.add(i)
-          })
-          if (next.size !== permaReveal.size) setPermaReveal(next)
-
-          raf = 0
-        })
+      if (newRevealed.size !== revealedExhibitions.size) {
+        setRevealedExhibitions(newRevealed)
+      }
     }
 
-    const onResize = () => measure()
+    handleScroll()
+    window.addEventListener('scroll', handleScroll, { passive: true })
+    window.addEventListener('resize', handleScroll)
 
-    measure()
-    window.addEventListener('scroll', onScroll, { passive: true })
-    window.addEventListener('resize', onResize)
     return () => {
-      window.removeEventListener('scroll', onScroll)
-      window.removeEventListener('resize', onResize)
-      if (raf) cancelAnimationFrame(raf)
+      window.removeEventListener('scroll', handleScroll)
+      window.removeEventListener('resize', handleScroll)
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [exhibitions.length, SPACING])
+  }, [revealedExhibitions])
 
-  /** Gentle easing for the stroke head */
-  const eased = Math.pow(progress, EASING_POWER)
+  // Calculate stroke dash offset for smooth progress bar
+  const strokeDashoffset = pathLen * (1 - progress)
 
-  /** Optional: live highlight of the card closest to mid-viewport */
+  // Highlight effect
   useEffect(() => {
     const io = new IntersectionObserver(
       (entries) => {
@@ -171,18 +162,15 @@ export default function ExhibitionTimeline({ exhibitions }: Props) {
           <div className="col-span-2 hidden sm:block">
             <div className="sticky" style={{ top: STICKY_TOP }}>
               <svg width="120" height={totalSvgH} viewBox={`0 0 120 ${totalSvgH}`}>
-                {/* Invisible reference for length */}
                 <path ref={pathRef} d={d} fill="none" stroke="none" />
-                {/* Background */}
                 <path d={d} fill="none" stroke="#E5E7EB" strokeWidth="2" className="opacity-30" />
-                {/* Animated head */}
                 <path
                   d={d}
                   fill="none"
                   stroke="url(#grad)"
                   strokeWidth="4"
                   strokeDasharray={pathLen}
-                  strokeDashoffset={pathLen * (1 - eased)}
+                  strokeDashoffset={strokeDashoffset}
                   style={{ filter: 'drop-shadow(0 2px 4px rgba(48,35,188,0.25))' }}
                 />
                 <defs>
@@ -192,12 +180,16 @@ export default function ExhibitionTimeline({ exhibitions }: Props) {
                   </linearGradient>
                 </defs>
 
-                {/* Nodes (reveal in lockstep with cards) */}
                 {exhibitions.map((ex, i) => {
                   const x = CENTER_X
                   const y = nodeY(i)
-                  const revealed = permaReveal.has(i)
+                  const revealed = revealedExhibitions.has(i)
                   const hot = highlight === ex.id
+
+                  // Calculate if this node should be filled based on progress
+                  const nodeProgress = (i + 1) / exhibitions.length
+                  const shouldFill = progress >= nodeProgress
+
                   return (
                     <g key={ex.id}>
                       <circle
@@ -207,9 +199,7 @@ export default function ExhibitionTimeline({ exhibitions }: Props) {
                         fill="none"
                         stroke="#DED308"
                         strokeWidth="2"
-                        className={`transition-all duration-500 ${
-                          revealed ? 'scale-100 opacity-60' : 'scale-0 opacity-0'
-                        }`}
+                        className={`transition-all duration-700 ${shouldFill ? 'scale-100 opacity-60' : 'scale-75 opacity-30'}`}
                         style={{ transformOrigin: `${x}px ${y}px` }}
                       />
                       <circle
@@ -218,10 +208,8 @@ export default function ExhibitionTimeline({ exhibitions }: Props) {
                         r="8"
                         stroke="#DED308"
                         strokeWidth="3"
-                        fill={revealed ? (hot ? '#DED308' : 'white') : 'transparent'}
-                        className={`transition-all duration-500 ${
-                          revealed ? 'scale-100 opacity-100' : 'scale-0 opacity-0'
-                        }`}
+                        fill={shouldFill ? (hot ? '#DED308' : '#DED308') : 'white'}
+                        className={`transition-all duration-700 ${shouldFill ? 'scale-100 opacity-100' : 'scale-75 opacity-50'}`}
                         style={{ transformOrigin: `${x}px ${y}px` }}
                       />
                     </g>
@@ -235,7 +223,7 @@ export default function ExhibitionTimeline({ exhibitions }: Props) {
           <div className="col-span-12 sm:col-span-10">
             <div className="space-y-28 md:space-y-32">
               {exhibitions.map((ex, i) => {
-                const revealed = permaReveal.has(i) // stays true once revealed
+                const revealed = revealedExhibitions.has(i)
                 return (
                   <div
                     key={ex.id}
@@ -243,14 +231,10 @@ export default function ExhibitionTimeline({ exhibitions }: Props) {
                       sectionRefs.current[i] = el
                     }}
                     data-id={ex.id}
-                    className={`transition-all duration-700 ease-out ${
-                      revealed ? 'translate-y-0 opacity-100' : 'translate-y-6 opacity-0'
-                    }`}
+                    className={`transition-all duration-700 ease-out ${revealed ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'}`}
                   >
                     <div
-                      className={`group overflow-hidden bg-white shadow-xl transition-all duration-500 ${
-                        highlight === ex.id ? 'ring-2 ring-[#DED308]/20' : ''
-                      }`}
+                      className={`group overflow-hidden bg-white shadow-xl transition-all duration-500 ${highlight === ex.id ? 'ring-2 ring-[#DED308]/20' : ''}`}
                     >
                       <div className="flex flex-col lg:flex-row">
                         <div className="w-full lg:w-1/3 xl:w-1/4">

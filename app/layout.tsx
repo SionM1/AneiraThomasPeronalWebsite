@@ -77,7 +77,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <meta name="theme-color" media="(prefers-color-scheme: light)" content="#fff" />
       <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#000" />
       <link rel="alternate" type="application/rss+xml" href="/feed.xml" />
-      <body className="flex min-h-screen flex-col bg-white text-black antialiased dark:bg-gray-900 dark:text-white">
+      <body className="bg-white text-black antialiased dark:bg-gray-900 dark:text-white">
         <ThemeProviders>
           <Analytics analyticsConfig={siteMetadata.analytics as AnalyticsConfig} />
 
@@ -85,10 +85,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <HamburgerMenu />
 
           <SearchProvider searchConfig={siteMetadata.search as SearchConfig}>
-            <div className="flex min-h-screen flex-col font-sans">
-              <main className="flex-grow">{children}</main>
-              <Footer />
+            <div className="min-h-screen">
+              <main>{children}</main>
             </div>
+            <Footer />
           </SearchProvider>
         </ThemeProviders>
       </body>

@@ -159,8 +159,8 @@ export default function ExhibitionsPage() {
         </div>
       </div>
 
-      {/* Spacer to maintain layout flow and footer positioning */}
-      <div style={{ height: `${exhibitions.length * 350 + 800}px` }}></div>
+      {/* Spacer to ensure proper footer positioning */}
+      <div className="h-32"></div>
     </>
   )
 }

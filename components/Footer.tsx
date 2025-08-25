@@ -10,9 +10,9 @@ export default function Footer() {
   const isAboutPage = pathname === '/about'
 
   return (
-    <footer className="relative right-1/2 left-1/2 -mx-[50vw] mt-auto w-screen bg-white">
+    <footer className="w-full border-t border-gray-200 bg-gray-50 py-12">
       {/* Your footer content */}
-      <div className="mt-20 flex flex-col items-center px-4 sm:px-6 lg:px-8">
+      <div className="mx-auto flex max-w-7xl flex-col items-center px-4 sm:px-6 lg:px-8">
         <div className="mb-3 flex space-x-4">
           <SocialIcon kind="mail" href={`mailto:${siteMetadata.email}`} size={6} />
           <SocialIcon kind="github" href={siteMetadata.github} size={6} />
