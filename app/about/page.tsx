@@ -1,4 +1,5 @@
 'use client'
+/* eslint-disable prettier/prettier */
 
 import { useEffect, useMemo, useRef, useState, type RefObject } from 'react'
 import Image from 'next/image'
