@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState, type RefObject } from 'react'
 import Image from 'next/image'
 import { Covered_By_Your_Grace } from 'next/font/google'
 
@@ -10,7 +10,7 @@ const BRAND = '#DED308'
 /* ---------- small hooks ---------- */
 
 // reveal once when the root section scrolls into view
-function useReveal(ref: React.RefObject<Element>, threshold = 0.15) {
+function useReveal(ref: RefObject<Element>, threshold = 0.15) {
   const [shown, setShown] = useState(false)
   useEffect(() => {
     if (!ref.current) return
@@ -28,7 +28,7 @@ function useReveal(ref: React.RefObject<Element>, threshold = 0.15) {
 
 // per-element parallax (relative to its own position, not page scroll)
 // pass a speed like 0.12, -0.1, etc
-function useParallax(ref: React.RefObject<HTMLElement>, speed = 0.12) {
+function useParallax(ref: RefObject<HTMLElement>, speed = 0.12) {
   const [y, setY] = useState(0)
 
   const reduced = useMemo(
@@ -225,6 +225,7 @@ export default function AboutPage() {
               />
             </div>
           </div>
+        </div>
         </div>
       </section>
     </div>
