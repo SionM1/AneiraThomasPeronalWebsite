@@ -38,8 +38,10 @@ function useParallax(ref: RefObject<HTMLElement>, speed = 0.12) {
     []
   )
 
+  const isMobile = useMemo(() => typeof window !== 'undefined' && window.innerWidth < 1024, [])
+
   useEffect(() => {
-    if (!ref.current || reduced) return
+    if (!ref.current || reduced || isMobile) return
 
     let raf = 0
     const onScroll = () => {
@@ -65,9 +67,9 @@ function useParallax(ref: RefObject<HTMLElement>, speed = 0.12) {
       window.removeEventListener('scroll', onScroll)
       window.removeEventListener('resize', onScroll)
     }
-  }, [ref, speed, reduced])
+  }, [ref, speed, reduced, isMobile])
 
-  return reduced ? 0 : y
+  return reduced || isMobile ? 0 : y
 }
 
 /* ---------- page ---------- */
@@ -114,7 +116,7 @@ export default function AboutPage() {
         </div>
 
         {/* row #1 */}
-        <div className="mb-16 grid grid-cols-1 items-center gap-8 lg:mb-24 lg:grid-cols-12 lg:gap-12 xl:gap-16">
+        <div className="mb-16 grid grid-cols-1 gap-8 md:gap-12 lg:mb-24 lg:grid-cols-12 lg:items-center lg:gap-12 xl:gap-16">
           {/* text */}
           <div className="space-y-6 lg:col-span-6">
             <p
@@ -153,7 +155,7 @@ export default function AboutPage() {
         </div>
 
         {/* row #2 (flip) */}
-        <div className="mb-16 grid grid-cols-1 items-center gap-8 lg:mb-24 lg:grid-cols-12 lg:gap-12 xl:gap-16">
+        <div className="mb-16 grid grid-cols-1 gap-8 md:gap-12 lg:mb-24 lg:grid-cols-12 lg:items-center lg:gap-12 xl:gap-16">
           {/* image */}
           <div ref={img2Ref} className="order-first lg:order-none lg:col-span-6">
             <div
@@ -190,7 +192,7 @@ export default function AboutPage() {
         </div>
 
         {/* row #3 */}
-        <div className="grid grid-cols-1 items-center gap-8 lg:grid-cols-12 lg:gap-12 xl:gap-16">
+        <div className="grid grid-cols-1 gap-8 md:gap-12 lg:grid-cols-12 lg:items-center lg:gap-12 xl:gap-16">
           {/* text */}
           <div className="space-y-6 lg:col-span-6">
             <p
