@@ -32,15 +32,15 @@ export default function ContactPage() {
         <div className="grid grid-cols-1 gap-12 sm:gap-14 md:gap-16 lg:grid-cols-2">
           {/* Left: Title + Info */}
           <div className="space-y-6 sm:space-y-8">
-            {/* NEW: Page title (moved from hero) */}
-            <div className="text-left">
-              <h1
-                className="mb-4 text-3xl sm:text-4xl md:text-5xl lg:text-6xl"
+            {/* Page title - standardized */}
+            <div className="mb-12 w-full">
+              <h2
+                className="mb-6 text-3xl sm:text-4xl md:text-5xl lg:text-6xl"
                 style={{ color: '#DED308', fontFamily: 'Menlo', fontWeight: 'bold' }}
               >
-                Get In Touch
-              </h1>
-              <div className="w-24 border-b-2 border-gray-300"></div>
+                Contact
+              </h2>
+              <div className="w-full border-b border-gray-200"></div>
             </div>
 
             {/* Section: Let's Connect */}

@@ -147,9 +147,8 @@ export default function ExhibitionsPage() {
               >
                 Exhibitions and Awards
               </h2>
+              <div className="w-full border-b border-gray-200"></div>
             </div>
-            {/* Divider Line */}
-            <div className="mb-16 w-full border-b border-gray-200"></div>
           </div>
 
           {/* Timeline Content */}
