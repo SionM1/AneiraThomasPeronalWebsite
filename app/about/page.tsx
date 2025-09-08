@@ -87,32 +87,33 @@ export default function AboutPage() {
 
   return (
     <div className="relative left-1/2 w-screen -translate-x-1/2 bg-white">
+      {/* Top-left site title (standardized) */}
+      <div className="absolute top-4 left-4 z-[60] sm:top-6 sm:left-8">
+        <h1
+          className={`${coveredByYourGrace.className} text-3xl sm:text-4xl md:text-5xl`}
+          style={{ color: BRAND }}
+        >
+          Aneira Thomas
+        </h1>
+      </div>
+
       {/* page padding wrapper */}
       <section
         ref={rootRef}
-        className={`mx-auto max-w-7xl px-4 py-20 transition-all duration-700 sm:px-6 sm:py-24 lg:px-10 ${show ? 'translate-y-0 opacity-100' : 'translate-y-6 opacity-0'}`}
+        className={`mx-auto transition-all duration-700 px-4 pt-32 sm:px-8 md:px-16 lg:px-24 xl:px-32 2xl:px-48 ${show ? 'translate-y-0 opacity-100' : 'translate-y-6 opacity-0'}`}
       >
-        {/* name lockup / header */}
-        <div className="relative mb-8 sm:mb-10 md:mb-12">
-          <h1
-            className={`${coveredByYourGrace.className} text-3xl sm:text-4xl md:text-5xl`}
-            style={{ color: BRAND }}
-          >
-            Aneira Thomas
-          </h1>
-        </div>
-
-        {/* section title */}
-        <div className="mb-10 sm:mb-12 md:mb-14">
+        {/* section title (standardized) */}
+        <div className="mb-12 w-full">
           <h2
-            className="text-3xl font-bold sm:text-4xl md:text-5xl"
-            style={{ color: BRAND, fontFamily: 'Menlo' }}
+            className="mb-6 text-3xl sm:text-4xl md:text-5xl lg:text-6xl"
+            style={{ color: BRAND, fontFamily: 'Menlo', fontWeight: 'bold' }}
           >
             About
           </h2>
-          <div className="mt-4 h-px w-full bg-gray-200" />
+          <div className="w-full border-b border-gray-200" />
         </div>
 
+        <div className="mx-auto max-w-7xl">
         {/* row #1 */}
         <div className="mb-16 grid grid-cols-1 items-center gap-8 lg:mb-24 lg:grid-cols-12 lg:gap-12 xl:gap-16">
           {/* text */}

@@ -44,25 +44,28 @@ export default function GalleryPage() {
 
   return (
     <div className="min-h-screen bg-white">
-      {/* Aneira Thomas Header */}
-      <div className="absolute top-6 left-8 z-[60]">
-        <h1 className={`${coveredByYourGrace.className} text-5xl`} style={{ color: '#DED308' }}>
+      {/* Aneira Thomas Header - standardized to Exhibitions */}
+      <div className="absolute top-4 left-4 z-[60] sm:top-6 sm:left-8">
+        <h1
+          className={`${coveredByYourGrace.className} text-3xl sm:text-4xl md:text-5xl`}
+          style={{ color: '#DED308' }}
+        >
           Aneira Thomas
         </h1>
       </div>
 
       {/* Main content */}
-      <div className="px-8 pt-32">
+      <div className="w-full px-4 pt-32 sm:px-8 md:px-16 lg:px-24 xl:px-32 2xl:px-48">
         <div
           ref={sectionRef}
           className={`transition-all duration-1000 ease-out ${
             isVisible ? 'translate-y-0 opacity-100' : 'translate-y-12 opacity-0'
           }`}
         >
-          {/* Page Title */}
-          <div className="mb-8">
+          {/* Page Title - standardized */}
+          <div className="mb-12 w-full">
             <h2
-              className="mb-6 text-6xl"
+              className="mb-6 text-3xl sm:text-4xl md:text-5xl lg:text-6xl"
               style={{ color: '#DED308', fontFamily: 'Menlo', fontWeight: 'bold' }}
             >
               Gallery
