@@ -100,7 +100,7 @@ export default function AboutPage() {
       {/* page padding wrapper */}
       <section
         ref={rootRef}
-        className={`mx-auto transition-all duration-700 px-4 pt-32 sm:px-8 md:px-16 lg:px-24 xl:px-32 2xl:px-48 ${show ? 'translate-y-0 opacity-100' : 'translate-y-6 opacity-0'}`}
+        className={`mx-auto max-w-7xl px-4 pt-32 transition-all duration-700 sm:px-8 md:px-16 lg:px-24 xl:px-32 2xl:px-48 ${show ? 'translate-y-0 opacity-100' : 'translate-y-6 opacity-0'}`}
       >
         {/* section title (standardized) */}
         <div className="mb-12 w-full">
@@ -113,8 +113,7 @@ export default function AboutPage() {
           <div className="w-full border-b border-gray-200" />
         </div>
 
-        <div className="mx-auto max-w-7xl">
-        {/* row #1 */}
+          {/* row #1 */}
         <div className="mb-16 grid grid-cols-1 items-center gap-8 lg:mb-24 lg:grid-cols-12 lg:gap-12 xl:gap-16">
           {/* text */}
           <div className="space-y-6 lg:col-span-6">
@@ -151,7 +150,6 @@ export default function AboutPage() {
               <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/10 to-transparent opacity-0 transition-opacity duration-500 hover:opacity-100" />
             </div>
           </div>
-        </div>
 
         {/* row #2 (flip) */}
         <div className="mb-16 grid grid-cols-1 items-center gap-8 lg:mb-24 lg:grid-cols-12 lg:gap-12 xl:gap-16">
@@ -188,7 +186,6 @@ export default function AboutPage() {
               making canvas stretcher bars and using traditional painting techniques.
             </p>
           </div>
-        </div>
 
         {/* row #3 */}
         <div className="grid grid-cols-1 items-center gap-8 lg:grid-cols-12 lg:gap-12 xl:gap-16">
@@ -225,8 +222,6 @@ export default function AboutPage() {
               />
             </div>
           </div>
-        </div>
-        </div>
       </section>
     </div>
   )
