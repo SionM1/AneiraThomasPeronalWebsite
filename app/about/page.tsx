@@ -102,7 +102,7 @@ export default function AboutPage() {
       {/* page padding wrapper */}
       <section
         ref={rootRef}
-        className={`mx-auto max-w-7xl px-4 pt-32 transition-all duration-700 sm:px-8 md:px-16 lg:px-24 xl:px-32 2xl:px-48 ${show ? 'translate-y-0 opacity-100' : 'translate-y-6 opacity-0'}`}
+        className={`w-full px-4 pt-32 transition-all duration-700 sm:px-8 md:px-16 lg:px-24 xl:px-32 2xl:px-48 ${show ? 'translate-y-0 opacity-100' : 'translate-y-6 opacity-0'}`}
       >
         {/* section title (standardized) */}
         <div className="mb-12 w-full">

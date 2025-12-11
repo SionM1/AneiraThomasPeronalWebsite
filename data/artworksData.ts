@@ -58,7 +58,7 @@ export const artworksData: Artwork[] = [
     size: '38x127cm',
     imagePath: '/static/images/Website%20gallery/Crud%20yr%20Awel.jpeg',
     year: 2024,
-    available: false,
+    available: true,
     dateAdded: '2024-01-03',
   },
   {
@@ -88,7 +88,7 @@ export const artworksData: Artwork[] = [
     size: '38x127cm',
     imagePath: '/static/images/Website%20gallery/Tentacle%2034818.jpeg',
     year: 2024,
-    available: false,
+    available: true,
     dateAdded: '2024-01-06',
   },
   {
@@ -148,7 +148,7 @@ export const artworksData: Artwork[] = [
     size: '45x75cm',
     imagePath: '/static/images/Website%20gallery/Rabbit%20Ears.jpeg',
     year: 2025,
-    available: true,
+    available: false,
     dateAdded: '2025-01-04',
   },
   {
@@ -208,7 +208,7 @@ export const artworksData: Artwork[] = [
     size: '30x40cm',
     imagePath: '/static/images/Website%20gallery/Cassis%20VII.jpeg',
     year: 2025,
-    available: true,
+    available: false,
     dateAdded: '2025-01-10',
   },
   {
@@ -218,7 +218,7 @@ export const artworksData: Artwork[] = [
     size: '30x40cm',
     imagePath: '/static/images/Website%20gallery/Cassis%20VI.jpeg',
     year: 2025,
-    available: true,
+    available: false,
     dateAdded: '2025-01-11',
   },
   {

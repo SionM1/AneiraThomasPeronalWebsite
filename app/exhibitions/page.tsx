@@ -34,7 +34,7 @@ const exhibitions = [
     venue: 'The Hari, 20 Chesham Place, London, SW1X 8HQ',
     date: 'March-September 2025',
     description: '',
-    imagePath: '/static/images/Website exhibition posters/TheHarixWoolff.JPG',
+    imagePath: '/static/images/Website exhibition posters/thehari.jpg',
   },
   {
     id: 4,
@@ -51,7 +51,7 @@ const exhibitions = [
     venue: '89 Charlotte St, London, W1T 4PU',
     date: '15th November-3rd December 2024',
     description: '',
-    imagePath: '/static/images/Website exhibition posters/thehari.jpg',
+    imagePath: '/static/images/Website exhibition posters/TheHarixWoolff.JPG',
   },
   {
     id: 6,
