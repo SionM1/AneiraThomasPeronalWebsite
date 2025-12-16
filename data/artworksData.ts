@@ -198,7 +198,7 @@ export const artworksData: Artwork[] = [
     size: '30x40cm',
     imagePath: '/static/images/Website%20gallery/Cassis%20II.jpeg',
     year: 2025,
-    available: true,
+    available: false,
     dateAdded: '2025-01-09',
   },
   {
