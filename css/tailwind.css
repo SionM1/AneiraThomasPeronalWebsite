@@ -82,9 +82,9 @@
     overflow-x: hidden;
   }
 
-  /* transparent scrollbar background in webkit browsers */
-  ::-webkit-scrollbar-track {
-    background: transparent;
+  /* Hide scrollbar entirely in webkit browsers */
+  ::-webkit-scrollbar {
+    display: none;
   }
 }
 
