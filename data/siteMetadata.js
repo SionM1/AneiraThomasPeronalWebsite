@@ -7,7 +7,7 @@ const siteMetadata = {
     'Contemporary artist Aneira Thomas - Explore my portfolio, current projects, and artistic journey',
   language: 'en-uk',
   theme: 'system', // system, dark or light
-  siteUrl: 'https://aneira-thomas-artist.vercel.app', // Update with actual domain
+  siteUrl: 'https://aneirathomas.com', // Update with actual domain
   siteRepo: 'https://github.com/yourusername/aneira-thomas-website',
   siteLogo: `${process.env.BASE_PATH || ''}/static/images/logo.png`,
   socialBanner: `${process.env.BASE_PATH || ''}/static/images/twitter-card.png`,
