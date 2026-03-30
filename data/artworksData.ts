@@ -22,7 +22,8 @@ function readArtworksFromDisk(): Artwork[] {
   return files.map((filename) => {
     const slug = filename.replace(/\.ya?ml$/, '')
     const fileContents = fs.readFileSync(path.join(artworksDir, filename), 'utf8')
-    const { data } = matter(fileContents)
+    // gray-matter expects frontmatter delimiters; prefix with --- so it parses pure YAML correctly
+    const { data } = matter('---\n' + fileContents)
     return {
       slug,
       title: data.title ?? '',
