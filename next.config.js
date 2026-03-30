@@ -74,6 +74,7 @@ module.exports = () => {
       dirs: ['app', 'components', 'layouts', 'scripts'],
     },
     devIndicators: false, // <<=== This disables the Dev UI
+    transpilePackages: ['@keystatic/core', '@keystatic/next', 'urql', '@urql/core'],
     images: {
       remotePatterns: [
         {
