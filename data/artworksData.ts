@@ -1,6 +1,5 @@
 import fs from 'fs'
 import path from 'path'
-import matter from 'gray-matter'
 
 export interface Artwork {
   slug: string
@@ -17,13 +16,12 @@ export interface Artwork {
 const artworksDir = path.join(process.cwd(), 'data/artworks')
 
 function readArtworksFromDisk(): Artwork[] {
-  const files = fs.readdirSync(artworksDir).filter((f) => f.endsWith('.yaml') || f.endsWith('.yml'))
+  const files = fs.readdirSync(artworksDir).filter((f) => f.endsWith('.json'))
 
   return files.map((filename) => {
-    const slug = filename.replace(/\.ya?ml$/, '')
+    const slug = filename.replace(/\.json$/, '')
     const fileContents = fs.readFileSync(path.join(artworksDir, filename), 'utf8')
-    // gray-matter expects frontmatter delimiters; prefix with --- so it parses pure YAML correctly
-    const { data } = matter('---\n' + fileContents)
+    const data = JSON.parse(fileContents)
     return {
       slug,
       title: data.title ?? '',
@@ -39,8 +37,7 @@ function readArtworksFromDisk(): Artwork[] {
 }
 
 export function getAllArtworks(): Artwork[] {
-  const artworks = readArtworksFromDisk()
-  return artworks.sort((a, b) => {
+  return readArtworksFromDisk().sort((a, b) => {
     const dateA = a.dateAdded || `${a.year || 2020}-01-01`
     const dateB = b.dateAdded || `${b.year || 2020}-01-01`
     return new Date(dateB).getTime() - new Date(dateA).getTime()

@@ -21,7 +21,7 @@ export default config({
       label: 'Artworks',
       slugField: 'title',
       path: 'data/artworks/*',
-      format: { data: 'yaml' },
+      format: { data: 'json' },
       entryLayout: 'form',
       schema: {
         title: fields.slug({
