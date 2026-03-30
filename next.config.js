@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-require-imports */
 const { withContentlayer } = require('next-contentlayer2')
 
 const withBundleAnalyzer = require('@next/bundle-analyzer')({
@@ -12,8 +13,8 @@ const ContentSecurityPolicy = `
   img-src * blob: data:;
   media-src *.s3.amazonaws.com;
   connect-src *;
-  font-src 'self';
-  frame-src giscus.app
+  font-src 'self' data:;
+  frame-src giscus.app https://github.com
 `
 
 const securityHeaders = [
@@ -86,8 +87,14 @@ module.exports = () => {
     async headers() {
       return [
         {
-          source: '/(.*)',
+          // Apply full security headers to all routes except the Keystatic admin
+          source: '/((?!keystatic).*)',
           headers: securityHeaders,
+        },
+        {
+          // Keystatic admin: same headers but without X-Frame-Options: DENY
+          source: '/keystatic/:path*',
+          headers: securityHeaders.filter((h) => h.key !== 'X-Frame-Options'),
         },
       ]
     },

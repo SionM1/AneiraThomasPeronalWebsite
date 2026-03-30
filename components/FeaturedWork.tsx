@@ -3,13 +3,14 @@
 import { useEffect, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Image from 'next/image'
-import { getFeaturedArtworks } from '@/data/artworksData'
+import type { Artwork } from '@/data/artworksData'
 
 interface FeaturedWorkProps {
+  artworks: Artwork[]
   className?: string
 }
 
-export default function FeaturedWork({ className = '' }: FeaturedWorkProps) {
+export default function FeaturedWork({ artworks, className = '' }: FeaturedWorkProps) {
   const [isVisible, setIsVisible] = useState(false)
   const sectionRef = useRef<HTMLDivElement>(null)
   const router = useRouter()
@@ -33,8 +34,6 @@ export default function FeaturedWork({ className = '' }: FeaturedWorkProps) {
 
     return () => observer.disconnect()
   }, [])
-
-  const artworks = getFeaturedArtworks(3)
 
   const navigateToGallery = () => {
     router.push('/gallery')
