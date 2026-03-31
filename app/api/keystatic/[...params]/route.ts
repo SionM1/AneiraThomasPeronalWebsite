@@ -13,7 +13,7 @@ export async function GET(
   console.log('[keystatic] CLIENT_ID set:', !!process.env.KEYSTATIC_GITHUB_CLIENT_ID)
   console.log('[keystatic] CLIENT_SECRET set:', !!process.env.KEYSTATIC_GITHUB_CLIENT_SECRET)
   console.log('[keystatic] SECRET set:', !!process.env.KEYSTATIC_SECRET)
-  return keystaticHandlers.GET(request, ctx)
+  return keystaticHandlers.GET(request)
 }
 
 export async function POST(
@@ -21,5 +21,5 @@ export async function POST(
   ctx: { params: Promise<Record<string, string | string[]>> }
 ) {
   console.log('[keystatic] POST', request.url)
-  return keystaticHandlers.POST(request, ctx)
+  return keystaticHandlers.POST(request)
 }
