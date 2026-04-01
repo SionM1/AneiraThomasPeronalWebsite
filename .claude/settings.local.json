@@ -6,7 +6,8 @@
       "Bash(cmd /c \"where node\")",
       "Bash(powershell -Command \"Get-Command node -ErrorAction SilentlyContinue | Select-Object Source\")",
       "Bash(cmd /c \"npm install \"\"@keystatic/core\"\" \"\"@keystatic/next\"\"\")",
-      "Bash(powershell.exe -Command \"npm --version\")"
+      "Bash(powershell.exe -Command \"npm --version\")",
+      "Bash(npx tsc:*)"
     ]
   }
 }

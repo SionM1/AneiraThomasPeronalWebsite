@@ -8,12 +8,23 @@ export interface Artwork {
   size: string
   imagePath: string
   year?: number
-  price?: string
   available?: boolean
   dateAdded?: string
 }
 
 const artworksDir = path.join(process.cwd(), 'data/artworks')
+const ARTWORKS_IMAGE_PUBLIC_PREFIX = '/static/images/artwork-uploads'
+
+/**
+ * Resolves the image path stored in the JSON file to a public URL.
+ * - Old format (starts with /): used as-is
+ * - New Keystatic fields.image() format (just filename): prefixed with public path + slug dir
+ */
+function resolveImagePath(value: string | undefined | null, slug: string): string {
+  if (!value) return ''
+  if (value.startsWith('/') || value.startsWith('http')) return value
+  return `${ARTWORKS_IMAGE_PUBLIC_PREFIX}/${slug}/${value}`
+}
 
 function readArtworksFromDisk(): Artwork[] {
   const files = fs.readdirSync(artworksDir).filter((f) => f.endsWith('.json'))
@@ -27,9 +38,9 @@ function readArtworksFromDisk(): Artwork[] {
       title: data.title ?? '',
       medium: data.medium ?? '',
       size: data.size ?? '',
-      imagePath: data.imagePath ?? '',
+      // Support both old text field (imagePath) and new image field (image)
+      imagePath: resolveImagePath(data.image ?? data.imagePath, slug),
       year: data.year,
-      price: data.price,
       available: data.available,
       dateAdded: data.dateAdded,
     } as Artwork

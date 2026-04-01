@@ -65,7 +65,7 @@ export default function GalleryClient({ artworks }: GalleryClientProps) {
       </div>
 
       {/* Main content */}
-      <div className="w-full px-4 pt-32 sm:px-8 md:px-16 lg:px-24 xl:px-32 2xl:px-48">
+      <div className="w-full px-4 pt-32 pb-32 sm:px-8 md:px-16 lg:px-24 xl:px-32 2xl:px-48">
         {/* Page Title */}
         <div className="mb-12 w-full">
           <h2
