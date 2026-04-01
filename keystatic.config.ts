@@ -38,7 +38,7 @@ export default config({
           label: 'Size',
           description: 'e.g. 51x66cm',
         }),
-        image: fields.image({
+        imagePath: fields.image({
           label: 'Image',
           directory: 'public/static/images/artwork-uploads',
           publicPath: '/static/images/artwork-uploads/',
@@ -86,7 +86,7 @@ export default config({
           multiline: true,
           validation: { isRequired: false },
         }),
-        image: fields.image({
+        imagePath: fields.image({
           label: 'Poster / Image',
           directory: 'public/static/images/exhibition-uploads',
           publicPath: '/static/images/exhibition-uploads/',
@@ -100,39 +100,6 @@ export default config({
           label: 'Display Order',
           description: 'Lower number = shown first. Set to 1 for newest.',
           defaultValue: 99,
-        }),
-      },
-    }),
-
-    // ─── Blog posts ───────────────────────────────────────────────────────────
-    blog: collection({
-      label: 'Blog Posts',
-      slugField: 'title',
-      path: 'data/blog/**',
-      format: { contentField: 'content' },
-      entryLayout: 'content',
-      schema: {
-        title: fields.slug({
-          name: { label: 'Title' },
-        }),
-        date: fields.date({
-          label: 'Date',
-          validation: { isRequired: true },
-        }),
-        summary: fields.text({
-          label: 'Summary',
-          multiline: true,
-        }),
-        tags: fields.array(fields.text({ label: 'Tag' }), {
-          label: 'Tags',
-          itemLabel: (props) => props.value || 'Tag',
-        }),
-        draft: fields.checkbox({
-          label: 'Draft (hidden on live site)',
-          defaultValue: false,
-        }),
-        content: fields.markdoc({
-          label: 'Content',
         }),
       },
     }),
@@ -187,7 +154,7 @@ export default config({
 
     // ─── Author / About ───────────────────────────────────────────────────────
     author: singleton({
-      label: 'Author Profile (Blog)',
+      label: 'Author Profile',
       path: 'data/authors/default',
       format: { contentField: 'bio' },
       entryLayout: 'content',
@@ -202,7 +169,7 @@ export default config({
           description: 'e.g. /static/images/aneira-avatar.jpg',
         }),
         bio: fields.markdoc({
-          label: 'Bio (full about page content)',
+          label: 'Bio',
         }),
       },
     }),

@@ -52,7 +52,7 @@ export default function ExhibitionsPage() {
       {/* Spacer for footer */}
       <div className="h-32"></div>
 
-      <AdminBar editHref="/keystatic/collection/exhibitions" editLabel="Edit Exhibitions" />
+      <AdminBar section="Exhibitions & Awards" />
     </>
   )
 }

@@ -7,7 +7,7 @@ export default function GalleryPage() {
   return (
     <>
       <GalleryClient artworks={artworks} />
-      <AdminBar editHref="/keystatic/collection/artworks" editLabel="Edit Gallery" />
+      <AdminBar section="Gallery" />
     </>
   )
 }

@@ -45,7 +45,7 @@ export default function AboutPage() {
   return (
     <>
       <AboutClient rows={rows} />
-      <AdminBar editHref="/keystatic/singleton/about" editLabel="Edit About" />
+      <AdminBar section="About" />
     </>
   )
 }

@@ -194,7 +194,7 @@ export default function ContactPage() {
         </div>
       </div>
 
-      <AdminBar editHref="/keystatic/singleton/contact" editLabel="Edit Contact" />
+      <AdminBar section="Contact" />
     </>
   )
 }

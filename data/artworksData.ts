@@ -38,8 +38,7 @@ function readArtworksFromDisk(): Artwork[] {
       title: data.title ?? '',
       medium: data.medium ?? '',
       size: data.size ?? '',
-      // Support both old text field (imagePath) and new image field (image)
-      imagePath: resolveImagePath(data.image ?? data.imagePath, slug),
+      imagePath: resolveImagePath(data.imagePath, slug),
       year: data.year,
       available: data.available,
       dateAdded: data.dateAdded,

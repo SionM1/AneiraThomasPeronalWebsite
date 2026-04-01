@@ -4,11 +4,10 @@ import Link from 'next/link'
 import { useEffect, useState } from 'react'
 
 interface AdminBarProps {
-  editHref: string
-  editLabel: string
+  section: string
 }
 
-export default function AdminBar({ editHref, editLabel }: AdminBarProps) {
+export default function AdminBar({ section }: AdminBarProps) {
   const [isAdmin, setIsAdmin] = useState(false)
 
   useEffect(() => {
@@ -27,12 +26,11 @@ export default function AdminBar({ editHref, editLabel }: AdminBarProps) {
           d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
         />
       </svg>
-      <Link href={editHref} className="text-sm font-semibold text-white hover:underline">
-        {editLabel}
-      </Link>
-      <span className="text-white/60">|</span>
+      <span className="text-sm text-white/80">Editing:</span>
+      <span className="text-sm font-semibold text-white">{section}</span>
+      <span className="text-white/40">|</span>
       <Link href="/keystatic" className="text-sm font-medium text-white hover:underline">
-        Admin
+        Open Admin →
       </Link>
     </div>
   )
