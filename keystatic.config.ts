@@ -151,27 +151,5 @@ export default config({
         introText: fields.text({ label: 'Intro Text', multiline: true }),
       },
     }),
-
-    // ─── Author / About ───────────────────────────────────────────────────────
-    author: singleton({
-      label: 'Author Profile',
-      path: 'data/authors/default',
-      format: { contentField: 'bio' },
-      entryLayout: 'content',
-      schema: {
-        name: fields.text({ label: 'Name' }),
-        occupation: fields.text({ label: 'Occupation' }),
-        company: fields.text({ label: 'Company / Studio' }),
-        email: fields.text({ label: 'Email' }),
-        linkedin: fields.url({ label: 'LinkedIn URL', validation: { isRequired: false } }),
-        avatar: fields.text({
-          label: 'Avatar image path',
-          description: 'e.g. /static/images/aneira-avatar.jpg',
-        }),
-        bio: fields.markdoc({
-          label: 'Bio',
-        }),
-      },
-    }),
   },
 })
