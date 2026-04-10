@@ -155,20 +155,6 @@ export default async function ArtworkPage({ params }: PageProps) {
                     </p>
                   </div>
                 )}
-
-                {artwork.price && artwork.available && (
-                  <div>
-                    <h3
-                      className="mb-2 text-xs tracking-wide uppercase"
-                      style={{ fontFamily: 'Menlo', fontWeight: 'bold', color: '#000' }}
-                    >
-                      Price
-                    </h3>
-                    <p className="text-base" style={{ fontFamily: 'Menlo', color: '#000' }}>
-                      {artwork.price}
-                    </p>
-                  </div>
-                )}
               </div>
 
               <div className="pt-4">

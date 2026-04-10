@@ -1,75 +1,96 @@
-import fs from 'fs'
-import path from 'path'
-import AboutClient from '@/components/AboutClient'
-import AdminBar from '@/components/AdminBar'
+'use client'
 
-<<<<<<< HEAD
 import { useEffect, useMemo, useRef, useState, type RefObject } from 'react'
-import Link from 'next/link'
 import Image from 'next/image'
 import { Covered_By_Your_Grace } from 'next/font/google'
-=======
-const ABOUT_IMAGE_PUBLIC_PREFIX = '/static/images/about/'
->>>>>>> e56c611d50253d57be3c429d819d471008172b47
 
-function resolveImage(value: string | undefined | null, fallback: string): string {
-  if (!value) return fallback
-  if (value.startsWith('/') || value.startsWith('http')) return value
-  return `${ABOUT_IMAGE_PUBLIC_PREFIX}${value}`
+const coveredByYourGrace = Covered_By_Your_Grace({ weight: '400', subsets: ['latin'] })
+const BRAND = '#DED308'
+
+function useReveal(ref: RefObject<Element>, threshold = 0.15) {
+  const [shown, setShown] = useState(false)
+  useEffect(() => {
+    if (!ref.current) return
+    const io = new IntersectionObserver(
+      ([e]) => {
+        if (e.isIntersecting) setShown(true)
+      },
+      { threshold }
+    )
+    io.observe(ref.current)
+    return () => io.disconnect()
+  }, [ref, threshold])
+  return shown
 }
 
-export default function AboutPage() {
-  const dataPath = path.join(process.cwd(), 'data/about/content.json')
-  const data = fs.existsSync(dataPath)
-    ? (JSON.parse(fs.readFileSync(dataPath, 'utf8')) as Record<string, string>)
-    : {}
+function useParallax(ref: RefObject<HTMLElement>, speed = 0.12) {
+  const [y, setY] = useState(0)
+  const reduced = useMemo(
+    () =>
+      typeof window !== 'undefined' &&
+      window.matchMedia('(prefers-reduced-motion: reduce)').matches,
+    []
+  )
+  const isMobile = useMemo(() => typeof window !== 'undefined' && window.innerWidth < 1024, [])
+  useEffect(() => {
+    if (!ref.current || reduced || isMobile) return
+    let raf = 0
+    const onScroll = () => {
+      raf =
+        raf ||
+        requestAnimationFrame(() => {
+          const el = ref.current!
+          const rect = el.getBoundingClientRect()
+          const delta = rect.top + rect.height / 2 - window.innerHeight / 2
+          setY(Math.max(-80, Math.min(80, -delta * speed)))
+          raf = 0
+        })
+    }
+    onScroll()
+    window.addEventListener('scroll', onScroll, { passive: true })
+    window.addEventListener('resize', onScroll)
+    return () => {
+      if (raf) cancelAnimationFrame(raf)
+      window.removeEventListener('scroll', onScroll)
+      window.removeEventListener('resize', onScroll)
+    }
+  }, [ref, speed, reduced, isMobile])
+  return reduced || isMobile ? 0 : y
+}
 
-  const rows: [
-    { p1: string; p2: string; imageSrc: string; imageAlt: string },
-    { p1: string; p2: string; imageSrc: string; imageAlt: string },
-    { p1: string; p2: string; imageSrc: string; imageAlt: string },
-  ] = [
-    {
-      p1: data.row1_p1 ?? '',
-      p2: data.row1_p2 ?? '',
-      imageSrc: resolveImage(data.row1_image, '/static/images/AneiraWorking1.jpeg'),
-      imageAlt: 'In the studio',
-    },
-    {
-      p1: data.row2_p1 ?? '',
-      p2: data.row2_p2 ?? '',
-      imageSrc: resolveImage(data.row2_image, '/static/images/AneiraWorking2.jpeg'),
-      imageAlt: 'Natural materials and process',
-    },
-    {
-      p1: data.row3_p1 ?? '',
-      p2: data.row3_p2 ?? '',
-      imageSrc: resolveImage(data.row3_image, '/static/images/AneiraWorking3.jpeg'),
-      imageAlt: 'Artistic environment',
-    },
-  ]
+interface Row {
+  p1: string
+  p2: string
+  imageSrc: string
+  imageAlt: string
+}
+
+export default function AboutClient({ rows }: { rows: [Row, Row, Row] }) {
+  const rootRef = useRef<HTMLDivElement>(null)
+  const show = useReveal(rootRef)
+  const img1Ref = useRef<HTMLDivElement>(null)
+  const img2Ref = useRef<HTMLDivElement>(null)
+  const img3Ref = useRef<HTMLDivElement>(null)
+  const y1 = useParallax(img1Ref, 0.12)
+  const y2 = useParallax(img2Ref, -0.1)
+  const y3 = useParallax(img3Ref, 0.14)
+  const [row1, row2, row3] = rows
 
   return (
-<<<<<<< HEAD
     <div className="relative left-1/2 w-screen -translate-x-1/2 bg-white">
-      {/* Top-left site title (standardized) */}
       <div className="absolute top-4 left-4 z-[60] sm:top-6 sm:left-8">
-        <Link href="/">
-          <h1
-            className={`${coveredByYourGrace.className} text-3xl sm:text-4xl md:text-5xl`}
-            style={{ color: BRAND }}
-          >
-            Aneira Thomas
-          </h1>
-        </Link>
+        <h1
+          className={`${coveredByYourGrace.className} text-3xl sm:text-4xl md:text-5xl`}
+          style={{ color: BRAND }}
+        >
+          Aneira Thomas
+        </h1>
       </div>
 
-      {/* page padding wrapper */}
       <section
         ref={rootRef}
         className={`w-full px-4 pt-32 transition-all duration-700 sm:px-8 md:px-16 lg:px-24 xl:px-32 2xl:px-48 ${show ? 'translate-y-0 opacity-100' : 'translate-y-6 opacity-0'}`}
       >
-        {/* section title (standardized) */}
         <div className="mb-12 w-full">
           <h2
             className="mb-6 text-3xl sm:text-4xl md:text-5xl lg:text-6xl"
@@ -80,35 +101,30 @@ export default function AboutPage() {
           <div className="w-full border-b border-gray-200" />
         </div>
 
-        {/* row #1 */}
+        {/* row 1 */}
         <div className="mb-16 grid grid-cols-1 gap-8 md:gap-12 lg:mb-24 lg:grid-cols-12 lg:items-center lg:gap-12 xl:gap-16">
-          {/* text */}
           <div className="space-y-6 lg:col-span-6">
             <p
               className="text-base leading-8 text-gray-900 md:text-lg"
               style={{ fontFamily: 'Menlo' }}
             >
-              Aneira Thomas’s practice explores her deep connection with nature and produces
-              surfaces full of movement, patterns and layers.
+              {row1.p1}
             </p>
             <p
               className="text-base leading-8 text-gray-900 md:text-lg"
               style={{ fontFamily: 'Menlo' }}
             >
-              Whilst reminiscing her memories, she pulls visual prompts from organic details of
-              nature as a symbol of time passing.
+              {row1.p2}
             </p>
           </div>
-
-          {/* image */}
           <div ref={img1Ref} className="lg:col-span-6">
             <div
               className="relative aspect-[4/3] w-full overflow-hidden border border-gray-200 shadow-md md:aspect-[3/2]"
               style={{ transform: `translateY(${y1}px)` }}
             >
               <Image
-                src="/static/images/AneiraWorking1.jpeg"
-                alt="In the studio"
+                src={row1.imageSrc}
+                alt={row1.imageAlt}
                 fill
                 className="object-cover transition-transform duration-700 hover:scale-105"
                 sizes="(max-width: 1024px) 100vw, 50vw"
@@ -119,72 +135,62 @@ export default function AboutPage() {
           </div>
         </div>
 
-        {/* row #2 (flip) */}
+        {/* row 2 */}
         <div className="mb-16 grid grid-cols-1 gap-8 md:gap-12 lg:mb-24 lg:grid-cols-12 lg:items-center lg:gap-12 xl:gap-16">
-          {/* image */}
           <div ref={img2Ref} className="order-first lg:order-none lg:col-span-6">
             <div
               className="relative aspect-[4/3] w-full overflow-hidden border border-gray-200 shadow-md md:aspect-[3/2]"
               style={{ transform: `translateY(${y2}px)` }}
             >
               <Image
-                src="/static/images/AneiraWorking2.jpeg"
-                alt="Natural materials and process"
+                src={row2.imageSrc}
+                alt={row2.imageAlt}
                 fill
                 className="object-cover transition-transform duration-700 hover:scale-105"
                 sizes="(max-width: 1024px) 100vw, 50vw"
               />
             </div>
           </div>
-
-          {/* text */}
           <div className="space-y-6 lg:col-span-6">
             <p
               className="text-base leading-8 text-gray-900 md:text-lg"
               style={{ fontFamily: 'Menlo' }}
             >
-              Through bright colourful surfaces, Thomas longs to feel connected to nature and
-              explores this relationship through mark making.
+              {row2.p1}
             </p>
             <p
               className="text-base leading-8 text-gray-900 md:text-lg"
               style={{ fontFamily: 'Menlo' }}
             >
-              Her practice includes many slower paced methods such as extracting natural pigments,
-              making canvas stretcher bars and using traditional painting techniques.
+              {row2.p2}
             </p>
           </div>
         </div>
 
-        {/* row #3 */}
-        <div className="grid grid-cols-1 gap-8 md:gap-12 lg:grid-cols-12 lg:items-center lg:gap-12 xl:gap-16">
-          {/* text */}
+        {/* row 3 */}
+        <div className="grid grid-cols-1 gap-8 pb-32 md:gap-12 lg:grid-cols-12 lg:items-center lg:gap-12 xl:gap-16">
           <div className="space-y-6 lg:col-span-6">
             <p
               className="text-base leading-8 text-gray-900 md:text-lg"
               style={{ fontFamily: 'Menlo' }}
             >
-              These methods encourage her audience to slow their pace, reflect on their memories and
-              regain a bond with the natural world.
+              {row3.p1}
             </p>
             <p
               className="text-base leading-8 text-gray-900 md:text-lg"
               style={{ fontFamily: 'Menlo' }}
             >
-              Thomas approaches her work using a variety of mediums, which allows her to work with
-              several layers that weave into one harmonious surface.
+              {row3.p2}
             </p>
           </div>
-
-          {/* image */}
           <div ref={img3Ref} className="lg:col-span-6">
             <div
               className="relative aspect-[4/3] w-full overflow-hidden border border-gray-200 shadow-md md:aspect-[3/2]"
               style={{ transform: `translateY(${y3}px)` }}
             >
               <Image
-                src="/static/images/AneiraWorking3.jpeg"
-                alt="Artistic environment"
+                src={row3.imageSrc}
+                alt={row3.imageAlt}
                 fill
                 className="object-cover transition-transform duration-700 hover:scale-105"
                 sizes="(max-width: 1024px) 100vw, 50vw"
@@ -194,11 +200,5 @@ export default function AboutPage() {
         </div>
       </section>
     </div>
-=======
-    <>
-      <AboutClient rows={rows} />
-      <AdminBar section="About" />
-    </>
->>>>>>> e56c611d50253d57be3c429d819d471008172b47
   )
 }

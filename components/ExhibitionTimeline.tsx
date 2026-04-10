@@ -6,6 +6,7 @@ import Link from 'next/link'
 
 interface Exhibition {
   id: number
+  slug?: string
   title: string
   venue: string
   date: string

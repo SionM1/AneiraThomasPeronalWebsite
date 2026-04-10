@@ -6,11 +6,7 @@ import 'katex/dist/katex.css'
 
 import { Space_Grotesk } from 'next/font/google'
 import { Analytics, AnalyticsConfig } from 'pliny/analytics'
-import { SearchProvider, SearchConfig } from 'pliny/search'
-import Header from '@/components/Header'
-import SectionContainer from '@/components/SectionContainer'
-import Footer from '@/components/Footer'
-import HamburgerMenu from '@/components/HamburgerMenu'
+import SiteChrome from '@/components/SiteChrome'
 import siteMetadata from '@/data/siteMetadata'
 import { ThemeProviders } from './theme-providers'
 import { Metadata } from 'next'
@@ -81,15 +77,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <ThemeProviders>
           <Analytics analyticsConfig={siteMetadata.analytics as AnalyticsConfig} />
 
-          {/* Global Hamburger Menu - appears on all pages */}
-          <HamburgerMenu />
-
-          <SearchProvider searchConfig={siteMetadata.search as SearchConfig}>
-            <div className="min-h-screen">
-              <main>{children}</main>
-            </div>
-            <Footer />
-          </SearchProvider>
+          <SiteChrome>{children}</SiteChrome>
         </ThemeProviders>
       </body>
     </html>

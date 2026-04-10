@@ -1,37 +1,72 @@
-<<<<<<< HEAD
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import Link from 'next/link'
 import Image from 'next/image'
 import { Covered_By_Your_Grace } from 'next/font/google'
-=======
->>>>>>> e56c611d50253d57be3c429d819d471008172b47
-import { getAllArtworks } from '@/data/artworksData'
-import GalleryClient from '@/components/GalleryClient'
-import AdminBar from '@/components/AdminBar'
+import type { Artwork } from '@/data/artworksData'
 
-export default function GalleryPage() {
-  const artworks = getAllArtworks()
+const coveredByYourGrace = Covered_By_Your_Grace({
+  weight: '400',
+  subsets: ['latin'],
+})
+
+interface GalleryClientProps {
+  artworks: Artwork[]
+}
+
+export default function GalleryClient({ artworks }: GalleryClientProps) {
+  const [visibleItems, setVisibleItems] = useState(new Set<number>())
+  const router = useRouter()
+  const itemRefs = useRef<(HTMLDivElement | null)[]>([])
+
+  useEffect(() => {
+    const initialBatch = Array.from({ length: Math.min(6, artworks.length) }, (_, i) => i)
+    setVisibleItems(new Set(initialBatch))
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const index = itemRefs.current.indexOf(entry.target as HTMLDivElement)
+            if (index !== -1) {
+              setVisibleItems((prev) => new Set(prev).add(index))
+            }
+          }
+        })
+      },
+      {
+        threshold: 0.1,
+        rootMargin: '50px 0px 50px 0px',
+      }
+    )
+
+    itemRefs.current.slice(6).forEach((ref) => {
+      if (ref) observer.observe(ref)
+    })
+
+    return () => observer.disconnect()
+  }, [artworks.length])
+
+  const navigateToArtwork = (slug: string) => {
+    router.push(`/gallery/${slug}`)
+  }
+
   return (
-<<<<<<< HEAD
     <div className="min-h-screen bg-white">
-      {/* Aneira Thomas Header - standardized to Exhibitions */}
+      {/* Aneira Thomas Header */}
       <div className="absolute top-4 left-4 z-[60] sm:top-6 sm:left-8">
-        <Link href="/">
-          <h1
-            className={`${coveredByYourGrace.className} text-3xl sm:text-4xl md:text-5xl`}
-            style={{ color: '#DED308' }}
-          >
-            Aneira Thomas
-          </h1>
-        </Link>
+        <h1
+          className={`${coveredByYourGrace.className} text-3xl sm:text-4xl md:text-5xl`}
+          style={{ color: '#DED308' }}
+        >
+          Aneira Thomas
+        </h1>
       </div>
 
       {/* Main content */}
-      <div className="w-full px-4 pt-32 sm:px-8 md:px-16 lg:px-24 xl:px-32 2xl:px-48">
-        {/* Page Title - standardized */}
+      <div className="w-full px-4 pt-32 pb-32 sm:px-8 md:px-16 lg:px-24 xl:px-32 2xl:px-48">
+        {/* Page Title */}
         <div className="mb-12 w-full">
           <h2
             className="mb-6 text-3xl sm:text-4xl md:text-5xl lg:text-6xl"
@@ -100,11 +135,5 @@ export default function GalleryPage() {
         </div>
       </div>
     </div>
-=======
-    <>
-      <GalleryClient artworks={artworks} />
-      <AdminBar section="Gallery" />
-    </>
->>>>>>> e56c611d50253d57be3c429d819d471008172b47
   )
 }
