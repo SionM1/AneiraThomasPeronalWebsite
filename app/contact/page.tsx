@@ -1,5 +1,6 @@
 import { Metadata } from 'next'
 import { Covered_By_Your_Grace } from 'next/font/google'
+import Link from 'next/link'
 import ContactForm from '@/components/ContactForm'
 import { genPageMetadata } from '../seo'
 
@@ -19,12 +20,14 @@ export default function ContactPage() {
     <div className="w-full">
       {/* Aneira Thomas Header - Top Left Position */}
       <div className="absolute top-4 left-4 z-[60] sm:top-6 sm:left-8">
-        <h1
-          className={`${coveredByYourGrace.className} text-3xl sm:text-4xl md:text-5xl`}
-          style={{ color: '#DED308' }}
-        >
-          Aneira Thomas
-        </h1>
+        <Link href="/">
+          <h1
+            className={`${coveredByYourGrace.className} text-3xl sm:text-4xl md:text-5xl`}
+            style={{ color: '#DED308' }}
+          >
+            Aneira Thomas
+          </h1>
+        </Link>
       </div>
 
       {/* Main Content (moved page H1 into left column) */}
