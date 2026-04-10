@@ -42,12 +42,14 @@ export default async function ArtworkPage({ params }: PageProps) {
     <div className="min-h-screen bg-white">
       {/* Header */}
       <div className="absolute top-4 left-4 z-[60] sm:top-6 sm:left-6">
-        <h1
-          className={`${coveredByYourGrace.className} text-3xl sm:text-4xl lg:text-5xl`}
-          style={{ color: '#DED308' }}
-        >
-          Aneira Thomas
-        </h1>
+        <Link href="/">
+          <h1
+            className={`${coveredByYourGrace.className} text-3xl sm:text-4xl lg:text-5xl`}
+            style={{ color: '#DED308' }}
+          >
+            Aneira Thomas
+          </h1>
+        </Link>
       </div>
 
       {/* Back */}

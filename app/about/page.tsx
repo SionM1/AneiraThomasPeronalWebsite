@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useMemo, useRef, useState, type RefObject } from 'react'
+import Link from 'next/link'
 import Image from 'next/image'
 import { Covered_By_Your_Grace } from 'next/font/google'
 
@@ -91,12 +92,14 @@ export default function AboutPage() {
     <div className="relative left-1/2 w-screen -translate-x-1/2 bg-white">
       {/* Top-left site title (standardized) */}
       <div className="absolute top-4 left-4 z-[60] sm:top-6 sm:left-8">
-        <h1
-          className={`${coveredByYourGrace.className} text-3xl sm:text-4xl md:text-5xl`}
-          style={{ color: BRAND }}
-        >
-          Aneira Thomas
-        </h1>
+        <Link href="/">
+          <h1
+            className={`${coveredByYourGrace.className} text-3xl sm:text-4xl md:text-5xl`}
+            style={{ color: BRAND }}
+          >
+            Aneira Thomas
+          </h1>
+        </Link>
       </div>
 
       {/* page padding wrapper */}

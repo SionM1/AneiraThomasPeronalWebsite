@@ -1,5 +1,6 @@
 import { Metadata } from 'next'
 import { Covered_By_Your_Grace } from 'next/font/google'
+import Link from 'next/link'
 import ExhibitionTimeline from '@/components/ExhibitionTimeline'
 import { genPageMetadata } from 'app/seo'
 
@@ -130,12 +131,14 @@ export default function ExhibitionsPage() {
         <div className="w-full bg-white py-16 sm:py-24" style={{ width: '100vw' }}>
           {/* Aneira Thomas Header - Top Left Position (scrolls naturally) */}
           <div className="absolute top-4 left-4 z-[60] sm:top-6 sm:left-8">
-            <h1
-              className={`${coveredByYourGrace.className} text-3xl sm:text-4xl md:text-5xl`}
-              style={{ color: '#DED308' }}
-            >
-              Aneira Thomas
-            </h1>
+            <Link href="/">
+              <h1
+                className={`${coveredByYourGrace.className} text-3xl sm:text-4xl md:text-5xl`}
+                style={{ color: '#DED308' }}
+              >
+                Aneira Thomas
+              </h1>
+            </Link>
           </div>
 
           {/* Section Title - Left Aligned with Divider */}

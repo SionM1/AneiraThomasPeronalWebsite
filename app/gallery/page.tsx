@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
+import Link from 'next/link'
 import Image from 'next/image'
 import { Covered_By_Your_Grace } from 'next/font/google'
 import { getAllArtworks } from '@/data/artworksData'
@@ -56,12 +57,14 @@ export default function GalleryPage() {
     <div className="min-h-screen bg-white">
       {/* Aneira Thomas Header - standardized to Exhibitions */}
       <div className="absolute top-4 left-4 z-[60] sm:top-6 sm:left-8">
-        <h1
-          className={`${coveredByYourGrace.className} text-3xl sm:text-4xl md:text-5xl`}
-          style={{ color: '#DED308' }}
-        >
-          Aneira Thomas
-        </h1>
+        <Link href="/">
+          <h1
+            className={`${coveredByYourGrace.className} text-3xl sm:text-4xl md:text-5xl`}
+            style={{ color: '#DED308' }}
+          >
+            Aneira Thomas
+          </h1>
+        </Link>
       </div>
 
       {/* Main content */}
