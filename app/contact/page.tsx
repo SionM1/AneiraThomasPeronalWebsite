@@ -32,29 +32,19 @@ export default function ContactPage() {
     "I'm always excited to discuss new projects, collaborate with fellow artists, or share insights about my work and process."
 
   return (
-<<<<<<< HEAD
-    <div className="w-full">
-      {/* Aneira Thomas Header - Top Left Position */}
-      <div className="absolute top-4 left-4 z-[60] sm:top-6 sm:left-8">
-        <Link href="/">
-=======
     <>
       <div className="w-full">
         {/* Header */}
         <div className="absolute top-4 left-4 z-[60] sm:top-6 sm:left-8">
->>>>>>> e56c611d50253d57be3c429d819d471008172b47
-          <h1
-            className={`${coveredByYourGrace.className} text-3xl sm:text-4xl md:text-5xl`}
-            style={{ color: '#DED308' }}
-          >
-            Aneira Thomas
-          </h1>
-<<<<<<< HEAD
-        </Link>
-      </div>
-=======
+          <Link href="/">
+            <h1
+              className={`${coveredByYourGrace.className} text-3xl sm:text-4xl md:text-5xl`}
+              style={{ color: '#DED308' }}
+            >
+              Aneira Thomas
+            </h1>
+          </Link>
         </div>
->>>>>>> e56c611d50253d57be3c429d819d471008172b47
 
         <div className="w-full px-4 pt-32 pb-32 sm:px-8 md:px-16 lg:px-24 xl:px-32 2xl:px-48">
           <div className="grid grid-cols-1 gap-12 sm:gap-14 md:gap-16 lg:grid-cols-2">

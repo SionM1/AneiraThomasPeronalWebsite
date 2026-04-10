@@ -1,13 +1,3 @@
-<<<<<<< HEAD
-'use client'
-
-import { useEffect, useRef, useState } from 'react'
-import { useRouter } from 'next/navigation'
-import Link from 'next/link'
-import Image from 'next/image'
-import { Covered_By_Your_Grace } from 'next/font/google'
-=======
->>>>>>> e56c611d50253d57be3c429d819d471008172b47
 import { getAllArtworks } from '@/data/artworksData'
 import GalleryClient from '@/components/GalleryClient'
 import AdminBar from '@/components/AdminBar'
@@ -15,96 +5,9 @@ import AdminBar from '@/components/AdminBar'
 export default function GalleryPage() {
   const artworks = getAllArtworks()
   return (
-<<<<<<< HEAD
-    <div className="min-h-screen bg-white">
-      {/* Aneira Thomas Header - standardized to Exhibitions */}
-      <div className="absolute top-4 left-4 z-[60] sm:top-6 sm:left-8">
-        <Link href="/">
-          <h1
-            className={`${coveredByYourGrace.className} text-3xl sm:text-4xl md:text-5xl`}
-            style={{ color: '#DED308' }}
-          >
-            Aneira Thomas
-          </h1>
-        </Link>
-      </div>
-
-      {/* Main content */}
-      <div className="w-full px-4 pt-32 sm:px-8 md:px-16 lg:px-24 xl:px-32 2xl:px-48">
-        {/* Page Title - standardized */}
-        <div className="mb-12 w-full">
-          <h2
-            className="mb-6 text-3xl sm:text-4xl md:text-5xl lg:text-6xl"
-            style={{ color: '#DED308', fontFamily: 'Menlo', fontWeight: 'bold' }}
-          >
-            Gallery
-          </h2>
-          <div className="w-full border-b border-gray-200"></div>
-        </div>
-
-        {/* Gallery Grid */}
-        <div className="grid max-w-none grid-cols-2 gap-4 sm:gap-6 md:gap-8 lg:grid-cols-3 lg:gap-12 xl:grid-cols-4">
-          {artworks.map((artwork, index) => (
-            <div
-              key={artwork.slug}
-              ref={(el) => (itemRefs.current[index] = el)}
-              className={`transition-all duration-800 ease-out ${
-                visibleItems.has(index)
-                  ? 'translate-y-0 scale-100 opacity-100'
-                  : 'translate-y-12 scale-95 opacity-0'
-              }`}
-              style={{
-                transitionDelay: visibleItems.has(index) ? `${Math.min(index, 5) * 100}ms` : '0ms',
-              }}
-            >
-              <div
-                className="group relative cursor-pointer transition-transform duration-500 hover:scale-105"
-                onClick={() => navigateToArtwork(artwork.slug)}
-                role="button"
-                tabIndex={0}
-                onKeyDown={(e) =>
-                  (e.key === 'Enter' || e.key === ' ') && navigateToArtwork(artwork.slug)
-                }
-              >
-                <div className="relative aspect-[4/3] w-full overflow-hidden bg-white shadow-lg">
-                  <Image
-                    src={artwork.imagePath}
-                    alt={artwork.title}
-                    fill
-                    className="object-cover"
-                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, (max-width: 1280px) 33vw, 25vw"
-                    priority={index < 6}
-                  />
-                  <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100">
-                    <div className="absolute right-0 bottom-0 left-0 p-4 text-white">
-                      <h3 className="mb-1 text-lg font-semibold italic">{artwork.title}</h3>
-                      <p className="mb-1 text-sm opacity-90">{artwork.medium}</p>
-                      {artwork.year && <p className="mb-2 text-sm opacity-75">{artwork.year}</p>}
-                      {artwork.available !== undefined && (
-                        <span
-                          className={`inline-block px-3 py-1 text-xs font-medium ${
-                            artwork.available
-                              ? 'bg-green-500/90 text-white'
-                              : 'bg-red-500/90 text-white'
-                          }`}
-                        >
-                          {artwork.available ? 'Available' : 'Sold'}
-                        </span>
-                      )}
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-    </div>
-=======
     <>
       <GalleryClient artworks={artworks} />
       <AdminBar section="Gallery" />
     </>
->>>>>>> e56c611d50253d57be3c429d819d471008172b47
   )
 }

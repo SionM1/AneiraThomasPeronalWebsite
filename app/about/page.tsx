@@ -3,14 +3,7 @@ import path from 'path'
 import AboutClient from '@/components/AboutClient'
 import AdminBar from '@/components/AdminBar'
 
-<<<<<<< HEAD
-import { useEffect, useMemo, useRef, useState, type RefObject } from 'react'
-import Link from 'next/link'
-import Image from 'next/image'
-import { Covered_By_Your_Grace } from 'next/font/google'
-=======
 const ABOUT_IMAGE_PUBLIC_PREFIX = '/static/images/about/'
->>>>>>> e56c611d50253d57be3c429d819d471008172b47
 
 function resolveImage(value: string | undefined | null, fallback: string): string {
   if (!value) return fallback
@@ -50,155 +43,9 @@ export default function AboutPage() {
   ]
 
   return (
-<<<<<<< HEAD
-    <div className="relative left-1/2 w-screen -translate-x-1/2 bg-white">
-      {/* Top-left site title (standardized) */}
-      <div className="absolute top-4 left-4 z-[60] sm:top-6 sm:left-8">
-        <Link href="/">
-          <h1
-            className={`${coveredByYourGrace.className} text-3xl sm:text-4xl md:text-5xl`}
-            style={{ color: BRAND }}
-          >
-            Aneira Thomas
-          </h1>
-        </Link>
-      </div>
-
-      {/* page padding wrapper */}
-      <section
-        ref={rootRef}
-        className={`w-full px-4 pt-32 transition-all duration-700 sm:px-8 md:px-16 lg:px-24 xl:px-32 2xl:px-48 ${show ? 'translate-y-0 opacity-100' : 'translate-y-6 opacity-0'}`}
-      >
-        {/* section title (standardized) */}
-        <div className="mb-12 w-full">
-          <h2
-            className="mb-6 text-3xl sm:text-4xl md:text-5xl lg:text-6xl"
-            style={{ color: BRAND, fontFamily: 'Menlo', fontWeight: 'bold' }}
-          >
-            About
-          </h2>
-          <div className="w-full border-b border-gray-200" />
-        </div>
-
-        {/* row #1 */}
-        <div className="mb-16 grid grid-cols-1 gap-8 md:gap-12 lg:mb-24 lg:grid-cols-12 lg:items-center lg:gap-12 xl:gap-16">
-          {/* text */}
-          <div className="space-y-6 lg:col-span-6">
-            <p
-              className="text-base leading-8 text-gray-900 md:text-lg"
-              style={{ fontFamily: 'Menlo' }}
-            >
-              Aneira Thomas’s practice explores her deep connection with nature and produces
-              surfaces full of movement, patterns and layers.
-            </p>
-            <p
-              className="text-base leading-8 text-gray-900 md:text-lg"
-              style={{ fontFamily: 'Menlo' }}
-            >
-              Whilst reminiscing her memories, she pulls visual prompts from organic details of
-              nature as a symbol of time passing.
-            </p>
-          </div>
-
-          {/* image */}
-          <div ref={img1Ref} className="lg:col-span-6">
-            <div
-              className="relative aspect-[4/3] w-full overflow-hidden border border-gray-200 shadow-md md:aspect-[3/2]"
-              style={{ transform: `translateY(${y1}px)` }}
-            >
-              <Image
-                src="/static/images/AneiraWorking1.jpeg"
-                alt="In the studio"
-                fill
-                className="object-cover transition-transform duration-700 hover:scale-105"
-                sizes="(max-width: 1024px) 100vw, 50vw"
-                priority
-              />
-              <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/10 to-transparent opacity-0 transition-opacity duration-500 hover:opacity-100" />
-            </div>
-          </div>
-        </div>
-
-        {/* row #2 (flip) */}
-        <div className="mb-16 grid grid-cols-1 gap-8 md:gap-12 lg:mb-24 lg:grid-cols-12 lg:items-center lg:gap-12 xl:gap-16">
-          {/* image */}
-          <div ref={img2Ref} className="order-first lg:order-none lg:col-span-6">
-            <div
-              className="relative aspect-[4/3] w-full overflow-hidden border border-gray-200 shadow-md md:aspect-[3/2]"
-              style={{ transform: `translateY(${y2}px)` }}
-            >
-              <Image
-                src="/static/images/AneiraWorking2.jpeg"
-                alt="Natural materials and process"
-                fill
-                className="object-cover transition-transform duration-700 hover:scale-105"
-                sizes="(max-width: 1024px) 100vw, 50vw"
-              />
-            </div>
-          </div>
-
-          {/* text */}
-          <div className="space-y-6 lg:col-span-6">
-            <p
-              className="text-base leading-8 text-gray-900 md:text-lg"
-              style={{ fontFamily: 'Menlo' }}
-            >
-              Through bright colourful surfaces, Thomas longs to feel connected to nature and
-              explores this relationship through mark making.
-            </p>
-            <p
-              className="text-base leading-8 text-gray-900 md:text-lg"
-              style={{ fontFamily: 'Menlo' }}
-            >
-              Her practice includes many slower paced methods such as extracting natural pigments,
-              making canvas stretcher bars and using traditional painting techniques.
-            </p>
-          </div>
-        </div>
-
-        {/* row #3 */}
-        <div className="grid grid-cols-1 gap-8 md:gap-12 lg:grid-cols-12 lg:items-center lg:gap-12 xl:gap-16">
-          {/* text */}
-          <div className="space-y-6 lg:col-span-6">
-            <p
-              className="text-base leading-8 text-gray-900 md:text-lg"
-              style={{ fontFamily: 'Menlo' }}
-            >
-              These methods encourage her audience to slow their pace, reflect on their memories and
-              regain a bond with the natural world.
-            </p>
-            <p
-              className="text-base leading-8 text-gray-900 md:text-lg"
-              style={{ fontFamily: 'Menlo' }}
-            >
-              Thomas approaches her work using a variety of mediums, which allows her to work with
-              several layers that weave into one harmonious surface.
-            </p>
-          </div>
-
-          {/* image */}
-          <div ref={img3Ref} className="lg:col-span-6">
-            <div
-              className="relative aspect-[4/3] w-full overflow-hidden border border-gray-200 shadow-md md:aspect-[3/2]"
-              style={{ transform: `translateY(${y3}px)` }}
-            >
-              <Image
-                src="/static/images/AneiraWorking3.jpeg"
-                alt="Artistic environment"
-                fill
-                className="object-cover transition-transform duration-700 hover:scale-105"
-                sizes="(max-width: 1024px) 100vw, 50vw"
-              />
-            </div>
-          </div>
-        </div>
-      </section>
-    </div>
-=======
     <>
       <AboutClient rows={rows} />
       <AdminBar section="About" />
     </>
->>>>>>> e56c611d50253d57be3c429d819d471008172b47
   )
 }
